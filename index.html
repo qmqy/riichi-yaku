@@ -13,11 +13,8 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;padding-bottom:40px}
-  header{background:linear-gradient(135deg,var(--green-d),var(--green));color:#fff;padding:26px 20px 22px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.1)}
-  header h1{font-size:22px;letter-spacing:1px}
-  header p{font-size:13px;opacity:.85;margin-top:6px}
   .wrap{max-width:980px;margin:0 auto;padding:0 16px}
-  .tabs{display:flex;gap:6px;margin:18px 0 16px;flex-wrap:wrap;justify-content:center}
+  .tabs{display:flex;gap:6px;margin:22px 0 16px;flex-wrap:wrap;justify-content:center}
   .tab{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:9px 18px;cursor:pointer;font-size:14px;color:var(--muted);transition:.15s}
   .tab:hover{border-color:var(--green)}
   .tab.on{background:var(--green);color:#fff;border-color:var(--green)}
@@ -25,14 +22,15 @@
   .panel.on{display:block}
   .panel h2{font-size:17px;margin-bottom:4px;color:var(--green-d)}
   .sub{font-size:12.5px;color:var(--muted);margin-bottom:16px}
-  .tile{display:inline-flex;align-items:center;justify-content:center;width:34px;height:44px;border-radius:6px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:15px;cursor:pointer;user-select:none;vertical-align:middle;margin:2px}
-  .tile.m{border-bottom:3px solid var(--green);color:var(--green-d)}
-  .tile.p{border-bottom:3px solid var(--blue);color:var(--blue)}
-  .tile.s{border-bottom:3px solid var(--green);color:#1b7a3a}
-  .tile.z{border-bottom:3px solid var(--red);color:var(--red)}
-  .tile.sel{background:var(--green-l);transform:translateY(-2px);box-shadow:0 3px 6px rgba(0,0,0,.12)}
-  .tile.small{width:29px;height:38px;font-size:13px;cursor:default}
-  .tile.win{background:#fff6d8;border-bottom:3px solid var(--gold)}
+  .tile{position:relative;display:inline-flex;align-items:center;justify-content:center;width:29px;height:45px;border-radius:4px;border:1px solid #d9cdb2;border-bottom:3px solid var(--line);background:linear-gradient(180deg,#fffef9,#f4efe1);box-shadow:inset 0 2px 0 #fff,0 1px 2px rgba(0,0,0,.12);cursor:pointer;user-select:none;vertical-align:middle;margin:2px;overflow:hidden}
+  .tile svg{width:100%;height:100%;display:block;pointer-events:none}
+  .tile.m{border-bottom-color:var(--green)}
+  .tile.p{border-bottom-color:var(--blue)}
+  .tile.s{border-bottom-color:#2e8b57}
+  .tile.z{border-bottom-color:var(--red)}
+  .tile.sel{transform:translateY(-2px);box-shadow:inset 0 2px 0 #fff,0 3px 7px rgba(0,0,0,.2);outline:2px solid var(--green);outline-offset:1px}
+  .tile.small{width:25px;height:38px;cursor:default}
+  .tile.win{background:linear-gradient(180deg,#fffaf0,#ffefc4);border-bottom-color:var(--gold)}
   .group{margin-bottom:10px}
   .group-label{font-size:12px;color:var(--muted);margin-right:6px;display:inline-block;width:28px}
   .input-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}
@@ -60,9 +58,11 @@
   .pick-wait:hover .cnt{color:var(--gold);font-weight:700}
   .tile.clickable{cursor:pointer;transition:.12s}
   .tile.clickable:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(0,0,0,.15);border-bottom-color:var(--gold)}
+  .tile.disabled{opacity:.28;filter:grayscale(1);cursor:not-allowed}
+  .group-label .g-note{font-size:10px;color:var(--red)}
   .statline{font-size:13px;color:var(--muted);margin-top:8px}
   .searchbar{display:flex;gap:8px;margin-bottom:14px}
-  .yaku-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+  .yaku-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;align-items:start}
   details{background:#fafcfb;border:1px solid var(--line);border-radius:9px;padding:10px 13px}
   details summary{cursor:pointer;font-size:14px;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px}
   details summary::-webkit-details-marker{display:none}
@@ -70,6 +70,9 @@
   .badge{font-size:11px;padding:2px 8px;border-radius:10px;white-space:nowrap}
   .badge.han{background:var(--green-l);color:var(--green-d)}
   .badge.ym{background:#fff0d0;color:#96680f}
+  .badge.dbl{background:#fde8c8;color:#8a4b09;border:1px solid #f0c98a}
+  .badge.ryu{background:var(--blue-l);color:var(--blue)}
+  .badge.extra{background:#f0ecf7;color:#6a4a97}
   .badge.ancient{background:var(--red-l);color:var(--red)}
   .stage{margin-bottom:20px}
   .stage h3{font-size:15px;color:var(--green-d);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
@@ -115,6 +118,35 @@
   .discard-btn .rk{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:#eef2f0;color:var(--muted);font-size:10px;font-weight:700}
   .discard-btn.on .rk{background:rgba(255,255,255,.25);color:#fff}
   .discard-btn .mini{font-size:10px;opacity:.75}
+  .shape-mini{font-size:10px;color:var(--muted);white-space:nowrap}
+  .discard-btn.on .shape-mini{color:rgba(255,255,255,.85)}
+  .shape-box{margin-top:10px;padding:10px 12px;background:#fff;border:1px solid var(--line);border-radius:9px;font-size:12.5px;line-height:1.85}
+  .shape-box b{color:var(--green-d)}
+  .shape-box .warn{color:var(--red);font-weight:600}
+  .shape-box .ok{color:var(--green-d);font-weight:600}
+  .mode-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;padding:10px 12px;background:#fafcfb;border:1px solid var(--line);border-radius:9px}
+  .mode-label{font-size:12.5px;color:var(--muted);font-weight:600}
+  .mode-btn{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:16px;padding:5px 14px;font-size:12.5px}
+  .mode-btn.on{background:var(--green);color:#fff;border-color:var(--green)}
+  .mode-note{font-size:11.5px;color:var(--muted);margin-left:auto}
+  .wind-btn{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:16px;padding:5px 14px;font-size:12.5px}
+  .wind-btn.on{background:var(--green);color:#fff;border-color:var(--green)}
+  .wind-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;font-size:12.5px}
+  .wind-row .mode-label{min-width:62px}
+  .dora-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding:10px 12px;background:#fffaf0;border:1px solid #f0dfae;border-radius:9px}
+  .dora-row .dora-info{font-size:11.5px;color:#96680f;margin-left:4px}
+  .dora-slots{display:inline-flex;gap:3px;align-items:center}
+  .dora-slot{position:relative;display:inline-flex}
+  .dora-slot .tile{cursor:pointer}
+  .dora-slot.filled .tile{outline:1.5px solid var(--gold);outline-offset:1px;border-radius:3px}
+  .dora-picker-wrap{margin:-4px 0 12px;padding:9px 12px;background:#fffaf0;border:1px solid #f0dfae;border-top:none;border-radius:0 0 9px 9px}
+  .tile-back{background:linear-gradient(135deg,#1f7a4d,#125c38);border:1px solid #0e4a2c;border-radius:3px;position:relative;overflow:hidden}
+  .tile-back::before{content:'';position:absolute;inset:3px;border:1px solid rgba(255,255,255,.35);border-radius:2px}
+  .tile-back::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent 0 4px,rgba(255,255,255,.08) 4px 8px)}
+  .tile.dora{box-shadow:inset 0 2px 0 #fff,0 0 0 1.5px var(--gold),0 0 7px rgba(201,144,42,.45)}
+  .tile.dora::after{content:'宝';position:absolute;top:-5px;right:-4px;z-index:2;font-size:9px;line-height:12px;font-weight:800;color:#fff;background:var(--gold);border-radius:50%;width:13px;height:13px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+  .tile.dora-pick{cursor:pointer}
+  .tile.dora-pick.on{outline:2px solid var(--gold);outline-offset:1px;transform:translateY(-2px)}
   .in-tiles{min-height:38px}
   .in-sum{font-size:12px;color:var(--muted);margin-top:7px}
   .yaku-sugg{margin-top:12px;background:#fff;border:1px solid #c7e6d3;border-radius:10px;padding:11px 13px}
@@ -127,14 +159,10 @@
   .verdict{font-size:13px;color:var(--ink);margin-top:10px;line-height:1.75}
   .verdict b.best{color:var(--green-d)}
   .hint{font-size:11.5px;color:var(--muted);margin-top:9px;line-height:1.7}
-  @media(max-width:600px){.panel{padding:16px}header h1{font-size:19px}.board-cols{grid-template-columns:1fr}}
+  @media(max-width:600px){.panel{padding:16px}.board-cols{grid-template-columns:1fr}}
 </style>
 </head>
 <body data-page-node-id="ooQGUw9albKR30w1z6vFOu">
-<header data-page-node-id="8IHSMIXzqumCscvJs9QFUO">
-  <h1 data-page-node-id="OoZLoi4TJZ7xPrdJgCjLwt"><!--pnid:1Wac7vL0Sdi0fNso1Kx7jP-->雀魂涨分助手</h1>
-  <p data-page-node-id="5I1qDTfcTqr6vUHLj6u8Zv"><!--pnid:xcpRQELuWgxoBTgsd5N7sH-->牌效率 · 役种速查 · 战绩统计 — 全部离线运行</p>
-</header>
 <div data-page-node-id="gVc6vBV4phV5fWpWsEBXhS" class="wrap">
   <div data-page-node-id="Q42cirWIoDlYVOclaJF2kR" class="tabs">
     <div data-page-node-id="ZFoYag5OA9AwPu3ulpjtGw" class="tab on" data-p="p1"><!--pnid:AdEJJMZnz3DiNerEjAhtzz-->牌效率计算器</div>
@@ -146,6 +174,32 @@
   <div data-page-node-id="lyyTr6T0CEuQEHUadmAtV7" class="panel on" id="p1">
     <h2 data-page-node-id="9YTPrsJvsROtrCe6V0uFR8"><!--pnid:81f6pHRAxELxmT8aCdFtEF-->牌效率计算器</h2>
     <div data-page-node-id="fkcucezC4bmfDAUBLiJ4iQ" class="sub"><!--pnid:Cr6Vx5WPKlP9E3E70ClfsT-->13 张看进张：<b>直接点下方「有效进张」的牌</b>，就当作摸到它，立刻出打牌建议与役种。也可点上方牌加入、点已选手牌移除。</div>
+    <div class="mode-row">
+      <span class="mode-label">对局模式：</span>
+      <button class="mode-btn on" data-mode="4">四人东/南</button>
+      <button class="mode-btn" data-mode="3">三人东/南</button>
+      <span class="mode-note" id="modeNote">四麻：1-9万齐全，可吃，有三色同顺</span>
+    </div>
+    <div class="wind-row">
+      <span class="mode-label">场风：</span>
+      <button class="wind-btn on" data-wind="round" data-v="0">东局</button>
+      <button class="wind-btn" data-wind="round" data-v="1">南局</button>
+      <span class="mode-label" style="margin-left:10px">自风：</span>
+      <button class="wind-btn on" data-wind="seat" data-v="0">东</button>
+      <button class="wind-btn" data-wind="seat" data-v="1">南</button>
+      <button class="wind-btn" data-wind="seat" data-v="2">西</button>
+      <button class="wind-btn" data-wind="seat" data-v="3">北</button>
+    </div>
+    <div class="dora-row">
+      <span class="mode-label">宝牌指示牌：</span>
+      <span id="doraSlots" class="dora-slots"></span>
+      <button class="btn ghost sm" id="doraToggle">选牌 ▾</button>
+      <button class="btn ghost sm" id="doraClear">清除</button>
+      <span class="dora-info" id="doraInfo">展开「选牌」点最多 5 张指示牌，自动算宝牌并标金色（宝牌=指示牌下一张）</span>
+    </div>
+    <div class="dora-picker-wrap" id="doraPickerWrap" style="display:none">
+      <span id="doraPicker" style="display:inline-flex;flex-wrap:wrap;gap:1px"></span>
+    </div>
     <div data-page-node-id="vw2div0eKLswiSkf3lQePm" id="picker"></div>
     <div data-page-node-id="cOQmWXGgrDF1upJ79zQg3f" class="input-row">
       <input data-page-node-id="B7UwFnC3VA0g5RRFkMNyR7" id="handInput" placeholder="快捷输入，如 123m456p789s东东 或 1112345678999m" type="text">
@@ -160,8 +214,8 @@
   <!--pnid:nSQOQZpMSnQnfim0BHb070--><!-- 役种速查 -->
   <div data-page-node-id="509doLf9ofapfg66Iy9UKO" class="panel" id="p2">
     <h2 data-page-node-id="08B3E33XL1TCwIDKAY6EMD"><!--pnid:Ow2L0SaspIIskHMt74IRCM-->役种速查</h2>
-    <div data-page-node-id="1iAM7oKfMCtKgjEVcYjQsp" class="sub"><!--pnid:8AyymL253l1LjLX6OCTmLG-->雀魂采用的标准役 + 常见古役。古役在雀魂中<b data-page-node-id="h7pFqZO7Pf4GGnEsZJiXGk"><!--pnid:QAbmIpTvLIMWDVmD9CQiXf-->不成立</b><!--pnid:VvG4OgI3lym2oaLKlyL0KJ-->（如你遇到的黑一色）。点击展开说明。</div>
-    <div data-page-node-id="lS0GHNQM3VKcy2GGON0AFF" class="searchbar"><input data-page-node-id="E5rzqKaiHyGK1MAiqyoOgl" id="yakuSearch" placeholder="搜索役名，如 混一色 / 黑一色 / 役满" type="text"></div>
+    <div data-page-node-id="1iAM7oKfMCtKgjEVcYjQsp" class="sub"><!--pnid:8AyymL253l1LjLX6OCTmLG-->按番数收录雀魂全役种：一番～六番、满贯/役满/双倍役满、流局役、宝牌，以及常见古役。古役会在标题标注「古役·」，并在右上角显示触发条件（如门前清限定、段位场不使用、副露减1番）。点击展开说明与示例牌，或用上方搜索（支持拼音首字母，如 lz=立直、hys=混一色）。</div>
+    <div data-page-node-id="lS0GHNQM3VKcy2GGON0AFF" class="searchbar"><input data-page-node-id="E5rzqKaiHyGK1MAiqyoOgl" id="yakuSearch" placeholder="搜役名或首字母，如 混一色 / hys / lz(立直) / 役满" type="text"></div>
     <div data-page-node-id="MfoWuydo2Nr04gwZf12JMC" class="yaku-grid" id="yakuGrid"></div>
   </div>
 
@@ -213,28 +267,342 @@ for(let i=1;i<=9;i++)TNAMES.push(i+'饼');
 for(let i=1;i<=9;i++)TNAMES.push(i+'索');
 ['东','南','西','北','中','发','白'].forEach(x=>TNAMES.push(x));
 function tileClass(i){return i<9?'m':i<18?'p':i<27?'s':'z';}
-function tileHTML(i,cls){return '<span class="tile '+tileClass(i)+' '+(cls||'')+'">'+TNAMES[i]+'</span>';}
+
+/* ---- 传统麻将牌面（内联 SVG，离线自绘）---- */
+const CNS=['一','二','三','四','伍','六','七','八','九']; // 传统牌面：五写作「伍」
+const HON=['東','南','西','北','中','發','白']; // 牌面用繁体字
+// 饼子圆点坐标（x,y 按 22×30 画布）
+const PIN_POS={
+ 1:[[11,15]],
+ 2:[[11,7],[11,23]],
+ 3:[[5,7],[11,15],[17,23]],
+ 4:[[6,7],[16,7],[6,23],[16,23]],
+ 5:[[6,7],[16,7],[11,15],[6,23],[16,23]],
+ 6:[[7,6],[15,6],[7,16],[15,16],[7,23],[15,23]],   // 上2黑 + 下4红聚拢（下面两行行距小于与上面间隔）
+ 7:[[5,6],[11,8],[17,10],[7,17],[15,17],[7,23],[15,23]], // 上3黑斜排 + 下4红聚拢
+ 8:[[8,6],[14,6],[8,12],[14,12],[8,18],[14,18],[8,24],[14,24]], // 两列收紧靠近
+ 9:[[5,6],[11,6],[17,6],[5,15],[11,15],[17,15],[5,24],[11,24],[17,24]]
+};
+// 饼芯颜色：2/4/8 全黑；9 中间行红；3/5/6/7 按参考图
+function pinCore(n,idx){
+  if(n===2||n===4||n===8)return '#141a22';
+  if(n===3)return idx===1?'#c0392b':'#141a22';
+  if(n===5)return idx===2?'#c0392b':'#141a22';
+  if(n===6)return idx<2?'#141a22':'#c0392b';
+  if(n===7)return idx<3?'#141a22':'#c0392b';
+  if(n===9)return (idx>=3&&idx<=5)?'#c0392b':'#141a22';
+  return '#141a22';
+}
+// 条子点位（每根 = [x,y,是否红]）：3条品字、5条中心红、6条两行每行三个、7条顶1红+下面三根两行、9条中列红
+const SOU_FACE={
+ 2:[[11,9,0],[11,21,0]],
+ 3:[[11,9,0],[6,21,0],[16,21,0]],
+ 4:[[6,9,0],[16,9,0],[6,21,0],[16,21,0]],
+ 5:[[6,9,0],[16,9,0],[11,15,1],[6,21,0],[16,21,0]],
+ 6:[[5,9,0],[11,9,0],[17,9,0],[5,21,0],[11,21,0],[17,21,0]],
+ 7:[[11,5.8,1],[5,15.2,0],[11,15.2,0],[17,15.2,0],[5,24.6,0],[11,24.6,0],[17,24.6,0]],
+ 9:[[5,5.8,0],[11,5.8,1],[17,5.8,0],[5,15.2,0],[11,15.2,1],[17,15.2,0],[5,24.6,0],[11,24.6,1],[17,24.6,0]]
+};
+// 饼点：铜钱/梅花状花纹圆（外环 + 五瓣花 + 花心），参考图样式
+function pinFlower(x,y,r,red){
+  const col=red?'#c0392b':'#1a1a1a';
+  let s='<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="#fdfaf0" stroke="'+col+'" stroke-width="'+Math.max(0.75,r*0.3).toFixed(2)+'"/>';
+  for(let k=0;k<5;k++){
+    const a=-Math.PI/2+k*2*Math.PI/5;
+    const px=(x+Math.cos(a)*r*0.42).toFixed(2),py=(y+Math.sin(a)*r*0.42).toFixed(2);
+    s+='<circle cx="'+px+'" cy="'+py+'" r="'+(r*0.3).toFixed(2)+'" fill="'+col+'"/>';
+  }
+  s+='<circle cx="'+x+'" cy="'+y+'" r="'+(r*0.16).toFixed(2)+'" fill="#fdfaf0"/>';
+  return s;
+}
+// 一根空心描边竹节（档3：喇叭状节头 + 空心镂空，无菱形腰、无横纹）
+// h=总高（标准条≈10.5、三行的7/9条≈7.2 更短），wScale 调宽度
+function bamboo(x,y,red,h,wScale){
+  const col=red?'#b5271c':'#0e7a3c';
+  const H=h||10, k=wScale||1;
+  const cap=1.9*k, stem=0.85*k; // 喇叭头半宽、竖杆半宽
+  const t=y-H/2, b=y+H/2;
+  const y1=t+H*0.22, y4=b-H*0.22;
+  // 左右对称闭合路径：顶圆头→斜扩喇叭→细杆→细杆→斜扩喇叭→底圆头（中间不鼓、不加横纹）
+  const d='M'+(x-stem*0.6)+' '+t
+    +' Q'+x+' '+(t-0.6)+' '+(x+stem*0.6)+' '+t
+    +' L'+(x+stem)+' '+(t+H*0.1)
+    +' L'+(x+cap)+' '+y1
+    +' L'+(x+stem)+' '+(y1+0.5)
+    +' L'+(x+stem)+' '+(y4-0.5)
+    +' L'+(x+cap)+' '+y4
+    +' L'+(x+stem)+' '+(b-H*0.1)
+    +' L'+(x+stem*0.6)+' '+b
+    +' Q'+x+' '+(b+0.6)+' '+(x-stem*0.6)+' '+b
+    +' L'+(x-stem)+' '+(b-H*0.1)
+    +' L'+(x-cap)+' '+y4
+    +' L'+(x-stem)+' '+(y4-0.5)
+    +' L'+(x-stem)+' '+(y1+0.5)
+    +' L'+(x-cap)+' '+y1
+    +' L'+(x-stem)+' '+(t+H*0.1)+' Z';
+  return '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1" stroke-linejoin="round"/>';
+}
+// 方正楷体_GBK 固定字形：15 个繁体字的矢量轮廓（upm=256，基线 y=0），写死以脱离系统字体依赖，跨设备一致
+const FZKAI={
+  '一':'M207 108Q234 102 235 87Q231 84 213 86Q175 88 137 85Q100 82 59 74Q43 72 41 72Q33 73 21 81Q13 89 20 89Q81 88 189 105Q205 108 207 108Z',
+  '二':'M63 148Q86 150 146 163Q160 166 162 166Q190 164 186 152Q157 141 86 136Q59 140 63 148ZM207 65Q245 59 243 42Q240 39 221 41Q176 45 132 41Q71 35 37 27Q12 32 12 43Q70 44 186 62Q204 65 207 65Z',
+  '三':'M158 169Q184 171 183 161Q171 149 95 142Q84 142 75 145Q62 150 70 151Q95 152 146 166Q156 169 158 169ZM154 106Q181 104 179 93Q178 92 158 90Q124 87 99 83Q91 83 81 87Q74 91 82 92Q105 93 143 103Q152 106 154 106ZM210 46Q243 38 239 25Q235 23 222 25Q184 31 135 26Q68 19 38 12Q34 11 23 19Q15 26 20 26Q62 25 174 41Q207 46 210 46Z',
+  '四':'M196 157Q223 154 233 136Q223 126 217 95Q215 80 213 70Q201 10 184 5Q181 5 178 17Q174 34 169 41Q102 37 62 31Q60 20 56 21Q52 22 49 35Q49 36 46 65Q43 86 43 90Q38 119 30 132Q30 133 29 134Q19 148 50 139Q138 146 196 157ZM185 143Q158 143 138 141Q138 141 141 139Q153 131 152 127Q152 126 151 124Q142 90 156 90Q159 90 166 91Q173 93 177 93Q193 89 191 82Q175 77 154 77Q133 79 135 105Q135 108 135 109Q136 128 132 140Q108 138 100 136Q112 124 109 121Q108 119 106 111Q97 77 79 64Q69 57 67 59Q66 61 74 70Q96 95 91 135Q91 135 72 133Q53 131 52 131Q52 128 61 41Q87 44 126 48Q163 52 166 52Q170 51 177 45Q183 40 186 40Q197 65 202 120Q204 147 185 143Z',
+  '伍':'M78 190Q91 188 101 174Q101 172 96 166Q91 160 89 156Q84 148 75 135Q71 130 69 127Q76 118 75 109Q74 105 74 102Q74 81 72 20Q69 -6 62 -10Q53 -2 53 15Q53 16 54 19Q65 56 62 118Q37 86 14 74Q9 70 7 71Q6 72 11 76Q42 107 70 156Q77 169 76 184Q76 189 78 190ZM189 169Q201 168 208 163Q212 159 202 156Q176 148 153 145Q162 139 161 132Q161 130 159 125Q155 114 151 99Q167 103 179 107Q183 109 185 109Q204 104 208 95Q208 93 205 89Q193 72 186 34Q219 40 223 39Q237 37 244 28Q249 19 236 21Q185 28 106 14Q96 12 95 12Q88 12 79 18Q73 23 81 23Q89 23 106 25Q115 26 121 27L136 87Q117 84 111 84Q105 84 101 88Q99 90 105 91Q123 94 138 97Q137 92 143 128Q145 140 143 143Q105 145 121 151Q152 155 178 165Q186 169 189 169ZM182 93Q180 95 153 90Q150 89 149 89L134 28L173 33Q184 83 182 93Z',
+  '六':'M110 178Q132 179 142 170Q150 159 147 147Q143 140 132 148Q94 178 110 178ZM210 129Q241 121 236 111Q231 107 211 108Q174 111 139 107Q67 100 40 90Q35 90 26 98Q21 103 26 104Q51 105 159 122Q207 129 210 129ZM153 79Q178 66 198 45Q208 24 200 13Q194 10 180 30Q171 44 154 65Q132 89 153 79ZM96 78Q119 68 113 61Q112 60 108 56Q77 28 54 15Q42 8 39 11Q38 14 50 22Q50 22 52 24Q88 54 88 71Q88 77 90 79Q91 80 96 78Z',
+  '七':'M103 187Q130 178 127 169Q118 160 121 94Q147 104 178 118Q191 124 196 126Q226 127 227 114Q226 113 217 111Q176 103 120 83Q120 81 120 78Q121 26 149 22Q179 19 201 30Q208 36 212 54Q214 65 215 63Q216 62 219 48Q221 41 224 33Q228 25 223 20Q202 3 155 6Q108 6 109 79Q52 57 44 52Q36 49 19 55Q8 60 18 62Q51 68 108 89Q108 95 107 111Q105 174 97 179Q92 183 94 186Q96 188 103 187Z',
+  '八':'M92 166Q101 167 114 163Q117 162 123 151Q133 136 142 123Q189 53 240 40Q254 36 254 33Q254 30 240 29Q239 29 236 29Q196 27 184 36Q178 41 139 103Q125 126 119 135Q106 155 92 158Q86 159 86 162Q86 165 92 166ZM80 114Q96 103 93 97Q92 96 89 90Q60 42 24 21Q11 14 9 15Q8 17 18 26Q67 71 71 109Q71 114 73 115Q76 117 80 114Z',
+  '九':'M105 196Q132 188 127 181Q123 177 117 147Q114 134 113 128Q144 139 151 146Q174 145 176 130Q158 119 151 83Q135 22 166 19Q205 15 217 24Q227 31 230 45Q234 62 237 62Q240 62 240 46Q240 38 242 27Q245 16 241 12Q232 2 205 0Q172 -2 155 5Q135 15 134 34Q131 49 143 111Q145 119 146 123Q149 131 143 128Q141 127 139 126Q135 125 123 121Q111 117 110 117Q89 31 34 9Q21 4 20 6Q19 7 29 14Q75 42 95 113Q87 110 72 104Q53 98 50 96Q42 93 30 103Q27 107 28 109Q29 110 35 110Q54 109 97 124Q107 174 98 189Q95 194 97 196Q99 198 105 196Z',
+  '萬':'M160 146Q183 140 189 129Q189 128 187 126Q180 121 176 111Q157 66 151 82L127 79V59Q173 63 194 67Q198 68 199 68Q210 65 223 54Q223 53 222 51Q218 45 217 35Q213 -9 208 -17Q199 -31 192 -30Q191 -30 188 -25Q179 -11 169 -3Q162 2 180 -2Q193 -5 194 -4Q199 0 201 26Q203 50 199 54Q196 57 182 56Q173 56 127 51V28L148 33Q145 40 145 41Q153 47 169 27Q172 20 168 14Q164 10 159 14Q155 18 150 27Q122 20 101 12Q94 10 92 10Q80 15 79 22Q79 23 86 23Q101 24 116 27V49L62 40Q65 17 65 16Q67 -24 60 -22Q54 -18 52 -5Q52 -9 52 11Q52 19 51 26Q50 36 45 46Q43 50 44 51Q47 54 62 49L116 57V78L96 75Q88 60 78 107Q75 119 69 128Q66 131 67 133Q69 137 86 133Q102 136 123 140Q163 147 160 146ZM161 136Q154 139 127 132Q129 129 128 124Q127 119 127 114Q134 117 140 117Q145 117 147 115Q149 112 146 110Q143 108 129 105Q128 105 127 105V87Q134 88 143 90Q152 92 153 89Q166 130 161 136ZM113 130 86 125 94 83 116 86V103Q110 103 106 103Q100 103 97 106Q95 109 100 109Q110 110 116 112Q116 124 113 130ZM158 207Q171 203 173 197Q173 195 171 192Q167 187 164 179Q169 180 179 182Q195 186 203 185Q214 184 218 179Q221 172 212 172Q179 170 159 169Q145 143 140 146Q138 147 147 168L111 165Q113 142 110 143Q105 141 99 163Q75 160 63 157Q61 156 59 156Q36 161 40 167Q60 168 96 171Q94 178 89 186Q84 192 87 194Q96 195 108 189Q109 186 109 181Q110 177 110 173Q121 174 149 177Q156 196 152 202Q150 205 152 207Q154 208 158 207Z',
+  '東':'M117 215Q135 211 136 207Q136 206 135 204Q131 196 131 177Q132 177 133 178Q153 184 164 184Q171 184 173 180Q174 177 168 174Q164 173 156 171Q140 167 130 164V140Q144 142 161 146Q172 148 175 148Q190 143 198 134Q198 132 194 128Q188 122 186 118Q183 108 176 91Q174 86 173 84Q167 69 164 70Q160 71 159 75Q158 77 157 79Q151 79 129 76V67Q189 18 247 13Q252 12 253 10Q254 8 250 7Q208 -1 202 0Q191 -1 184 5Q153 32 129 57Q129 23 129 -13Q127 -38 121 -36Q112 -28 111 -12Q111 -11 112 -9Q116 7 117 56Q79 11 22 -10Q17 -11 15 -10Q13 -9 17 -7Q74 25 110 74L87 71Q88 62 83 62Q79 62 68 96Q66 102 66 103Q62 114 56 122Q52 126 53 130Q57 133 74 129L118 138V162Q101 157 89 157Q71 161 79 165Q94 167 118 174Q118 179 118 187Q117 206 114 209Q111 211 112 213Q114 216 117 215ZM165 137Q158 138 130 131L129 113Q145 117 148 117Q154 117 155 113Q156 110 150 108Q149 108 148 108Q138 106 129 103V84Q139 85 149 87Q157 89 161 86Q174 137 165 137ZM118 129 74 120 85 79 117 83V100Q107 98 98 99Q81 102 89 106Q90 106 117 111Z',
+  '南':'M114 201Q132 204 143 190Q143 189 142 186Q136 175 130 153Q135 154 144 157Q157 161 162 162Q172 163 178 157Q181 153 171 150Q165 148 135 142Q140 143 126 140L114 108Q173 116 195 122Q199 123 200 123Q222 117 229 106Q229 105 227 102Q220 93 219 78Q218 30 213 5Q205 -21 188 -24Q186 -24 182 -15Q176 -1 169 5Q160 12 176 9Q189 5 191 7Q199 15 202 56Q204 101 197 108Q192 111 159 107Q148 106 142 105Q154 99 154 95Q153 93 148 88Q138 80 129 71Q135 72 143 74Q148 76 151 76Q159 76 163 72Q165 69 158 67Q154 66 139 63Q127 60 124 60Q128 58 126 52Q125 47 124 44Q135 45 149 48Q155 49 157 49Q166 49 170 43Q172 38 163 38Q149 38 124 34L123 16Q122 -7 116 -9Q113 -6 112 14V33Q106 32 97 29Q88 27 84 27Q64 32 74 35Q90 37 112 42Q112 46 112 58Q102 55 94 55Q86 55 80 58Q77 60 85 62Q106 66 122 70Q138 90 135 103L54 90Q56 50 56 18Q56 -5 48 -7Q40 1 39 16Q39 17 40 20Q46 34 39 81Q38 87 35 94Q32 100 33 102Q35 104 49 100Q52 98 54 98L104 107L113 137Q95 133 80 136Q64 139 78 143Q82 144 92 146Q108 148 115 150Q118 166 118 172Q119 185 115 195Q113 199 114 201ZM88 89Q86 101 108 84Q110 78 106 73Q103 69 99 73Q91 81 88 89Z',
+  '西':'M167 187Q179 188 186 182Q190 176 179 172Q173 170 151 167Q139 165 133 164Q148 157 148 151Q148 148 147 143Q143 133 141 119Q170 123 192 128Q200 129 202 129Q222 121 231 108Q231 106 228 103Q219 95 217 82Q209 32 201 12Q188 -10 178 -10Q176 -10 173 4Q167 28 162 29Q135 31 61 22Q60 9 57 6Q53 4 50 14Q50 17 48 27Q44 66 38 86Q35 97 27 105Q26 107 26 107Q28 110 44 106Q49 105 52 104L90 111Q90 143 85 158Q71 157 59 161Q46 166 59 167Q91 170 132 180Q156 186 167 187ZM129 164 91 159Q92 159 93 158Q102 153 103 148Q103 146 103 138Q102 124 102 113L130 117Q133 152 129 164ZM140 112Q140 109 139 103Q139 97 138 94Q136 79 151 79Q155 79 161 82Q164 83 165 83Q183 78 175 70Q167 67 154 68Q126 68 127 89Q127 90 128 93Q129 104 129 111L102 107Q99 67 76 50Q67 46 73 54Q87 71 90 104L53 97L60 30Q87 33 122 38Q162 43 166 40Q169 39 174 33Q181 24 185 23Q193 39 198 73Q201 104 196 112Q188 118 140 112Z',
+  '北':'M130 196Q142 200 159 180Q160 178 158 173Q150 154 149 126L148 99Q163 109 179 124Q184 129 185 135Q185 139 187 140Q204 137 212 126Q212 124 197 116Q170 103 148 90V59Q144 27 184 29Q203 30 212 39Q217 46 220 65Q222 72 224 74Q226 74 227 68Q229 50 233 37Q236 31 234 28Q222 14 186 12Q130 10 137 73Q138 90 139 117Q139 147 138 163Q137 176 131 189Q129 195 130 196ZM79 176Q88 180 106 165Q108 162 107 154Q104 140 104 126V29Q104 1 97 -1Q89 1 87 17Q87 20 88 25Q91 37 91 53Q62 35 46 20Q44 18 43 18Q27 23 21 34Q21 36 26 37Q36 38 47 42Q65 48 91 60V106Q82 105 68 100Q60 97 57 97Q45 97 39 103Q35 107 45 109Q60 112 85 116Q89 117 91 117Q91 155 80 171Q78 175 79 176Z',
+  '中':'M112 206Q128 210 142 194Q142 193 141 190Q135 177 135 147Q171 151 188 157Q192 158 193 158Q215 149 223 139Q223 137 219 132Q205 119 194 98Q202 91 198 85Q197 84 185 83Q161 83 133 81Q133 20 131 -8Q127 -37 121 -34Q117 -27 117 -4Q117 18 118 54Q119 70 119 80L76 76Q76 60 69 63Q63 68 61 86Q58 121 46 137Q43 140 44 142Q47 147 70 139L120 144Q120 144 119 170Q118 187 113 199Q110 204 112 206ZM186 140Q179 144 134 139L133 90Q177 95 178 99Q183 105 186 121Q189 137 186 140ZM120 137 71 131 75 84 119 88Z',
+  '發':'M148 201Q162 197 163 193Q163 191 155 185Q144 177 135 168L154 151Q178 173 178 181Q177 184 179 185Q181 186 184 185Q198 177 199 173Q198 171 188 165Q172 156 157 147Q207 96 251 90Q254 89 254 87Q254 85 251 85Q248 85 243 84Q211 79 207 83Q203 85 190 99Q166 126 140 150Q134 156 123 164Q115 170 115 171Q120 179 130 172Q145 187 142 196Q139 202 148 201ZM90 179Q104 176 108 168Q109 165 106 160Q103 157 102 155Q63 79 15 50Q12 48 12 49Q12 50 14 53Q42 78 67 116Q55 124 46 136Q63 141 70 122Q88 155 87 165Q86 166 79 164Q70 162 68 162Q49 163 56 168Q78 172 87 177Q89 179 90 179ZM152 120Q164 119 168 113Q168 111 166 108Q165 107 164 105Q157 89 162 84Q165 81 174 82Q177 83 179 83Q185 83 188 78Q190 74 185 73Q179 71 165 71Q153 71 151 86Q151 90 152 97Q153 107 152 108Q151 109 143 108Q139 107 136 106Q140 73 114 58Q108 55 112 60Q124 74 125 94Q125 101 122 109Q121 113 121 114Q122 117 133 114Q134 113 135 113Q143 115 149 119Q151 120 152 120ZM102 115Q112 112 115 106Q115 105 112 102Q104 95 99 83Q105 82 106 78Q107 75 103 74Q98 73 87 72Q82 71 79 71Q78 68 77 62Q75 55 74 52Q79 52 83 54Q85 55 87 55Q98 53 102 45Q102 43 101 41Q99 39 99 36Q97 -10 75 -18Q74 -18 72 -14Q67 -4 58 3Q53 7 67 4Q76 3 77 3Q82 5 84 21Q87 41 84 45Q80 49 70 42Q67 40 63 35Q60 31 59 31Q52 34 56 43Q68 56 69 69Q69 72 68 76Q67 79 67 80Q69 84 78 77Q79 77 79 77Q86 77 90 81Q96 98 95 103Q94 105 86 102Q84 102 84 102Q80 102 77 105Q75 107 79 107Q88 108 96 113Q100 115 102 115ZM156 61Q167 58 174 50Q174 48 171 46Q169 44 168 42Q168 41 166 39Q161 27 157 22Q179 11 186 1Q193 -9 191 -15Q188 -21 180 -15Q173 -9 149 11Q129 -8 104 -11Q101 -11 100 -10Q100 -9 103 -8Q126 2 138 18Q136 20 128 25Q118 31 114 34Q111 36 111 37Q112 38 115 37Q127 34 145 27Q154 44 152 48Q151 49 137 46Q131 44 129 44Q111 46 117 50Q139 53 151 59Q154 61 156 61Z'
+};
+// 用固定字形绘制一个字：模拟原 <text text-anchor=middle> 的定位（cx 居中，by 为基线，fontSize 为字号）
+// transform: 字体坐标以 -128 水平居中 → 缩放 s=fontSize/256 并翻转 Y → 平移到 (cx,by)
+function fk(ch,cx,by,fontSize,fill,extraStroke){
+  const s=fontSize/256;
+  const st=extraStroke?' stroke="'+extraStroke+'" stroke-width="0.25" vector-effect="non-scaling-stroke" paint-order="stroke"':'';
+  return '<path d="'+FZKAI[ch]+'" transform="translate('+cx+' '+by+') scale('+s.toFixed(6)+' '+(-s).toFixed(6)+') translate(-128 0)" fill="'+fill+'"'+st+'/>';
+}
+function tileFaceSVG(i){
+  const open='<svg viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg">';
+  const F='方正行楷繁体,方正行楷,FZXingKai-Z04S,FZXingKai,STXingkai,STKAITI,KaiTi,serif'; // 方正行楷繁体：毛笔行楷，贴近雀魂牌面书法字
+  let s='';
+  if(i<9){ // 万：黑数字 + 红萬（固定字形：方正楷体_GBK）
+    s+=fk(CNS[i],11,13,14,'#0f1418');
+    s+=fk('萬',11,27.5,14,'#c40000','#8c0000');
+  }else if(i<18){ // 饼：铜钱花纹圆（参考图）
+    const n=i-8;
+    if(n===1){ // 1饼：多层同心圆 + 放射纹 + 中心红芯（参考图式太阳纹）
+      s+='<circle cx="11" cy="15" r="8.4" fill="#fdfaf0" stroke="#141a22" stroke-width="1"/>';
+      for(let k=0;k<20;k++){const a=k*Math.PI/10;
+        s+='<line x1="'+(11+Math.cos(a)*6.9).toFixed(2)+'" y1="'+(15+Math.sin(a)*6.9).toFixed(2)+'" x2="'+(11+Math.cos(a)*8.1).toFixed(2)+'" y2="'+(15+Math.sin(a)*8.1).toFixed(2)+'" stroke="#141a22" stroke-width="0.55"/>';
+      }
+      s+='<circle cx="11" cy="15" r="6.5" fill="none" stroke="#141a22" stroke-width="0.8"/>';
+      for(let k=0;k<12;k++){const a=k*Math.PI/6;
+        s+='<line x1="'+(11+Math.cos(a)*4.4).toFixed(2)+'" y1="'+(15+Math.sin(a)*4.4).toFixed(2)+'" x2="'+(11+Math.cos(a)*6.2).toFixed(2)+'" y2="'+(15+Math.sin(a)*6.2).toFixed(2)+'" stroke="#c0392b" stroke-width="0.7"/>';
+      }
+      s+='<circle cx="11" cy="15" r="4" fill="#c0392b"/>';
+      s+='<circle cx="11" cy="15" r="2" fill="none" stroke="#141a22" stroke-width="0.9"/>';
+      s+='<circle cx="11" cy="15" r="1" fill="#c0392b"/>';
+    }else{
+      const pr=(n===2)?3.9:(n===8?2.8:3.1); // 二饼圆筒相对放大；八饼两列收紧后略缩小避免重叠
+      PIN_POS[n].forEach((p,k)=>{s+=pinFlower(p[0],p[1],pr,pinCore(n,k)==='#c0392b');});
+    }
+  }else if(i<27){ // 索：传统竹节；1索孔雀仅绿色、8索上W下反W（保留）
+    const n=i-17;
+    if(n===1){ // 1索：孔雀开屏（绿冠+白点、黑线鸟身、红嘴红脚）
+      // 开屏冠：绿色扇形 + 白色眼斑
+      s+='<path d="M11 3 C5 3 2.5 7 3 11 C2 14 3 17 4 18 L18 18 C19 17 20 14 19 11 C19.5 7 17 3 11 3 Z" fill="#1a8a4a" stroke="#0f6b38" stroke-width="0.5"/>';
+      [[7,8,1.3],[11,7,1.3],[15,8,1.3],[5.5,11.5,1.2],[8.5,11.5,1.2],[11,11,1.2],[13.5,11.5,1.2],[16.5,11.5,1.2],[7,15,1.1],[11,14.5,1.1],[15,15,1.1]].forEach(p=>{
+        s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+p[2]+'" fill="#eef6e9" stroke="#0f6b38" stroke-width="0.4"/>';
+        s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(p[2]*0.45).toFixed(2)+'" fill="#1a8a4a"/>';
+      });
+      // 鸟身：黑线勾勒 + 翅膀网格
+      s+='<path d="M9 17 C7 19 6.5 22 8.5 25 C10 27 14 27 15.5 25 C17.5 22 16 19 14 17 Z" fill="#fdfaf0" stroke="#263238" stroke-width="0.7"/>';
+      s+='<path d="M8 18 L11 22 L8 23 M15 18 L12 22 L15 23" fill="none" stroke="#263238" stroke-width="0.6"/>';
+      s+='<path d="M9 22 L6.5 24 M14 22 L16.5 24" stroke="#263238" stroke-width="0.6"/>';
+      // 头与红嘴（左侧）
+      s+='<circle cx="6.5" cy="19" r="2.1" fill="#fdfaf0" stroke="#263238" stroke-width="0.7"/>';
+      s+='<circle cx="6" cy="18.6" r="0.4" fill="#263238"/>';
+      s+='<path d="M4.5 19 L2.5 19.8 L4.5 20.5 Z" fill="#c0392b" stroke="#8e2d22" stroke-width="0.3"/>';
+      // 红脚
+      s+='<path d="M10.5 26 L10 28.5 M10 28.5 L8.8 28.8 M10 28.5 L11.2 28.8 M14 26 L14.5 28.5 M14.5 28.5 L13.3 28.8 M14.5 28.5 L15.7 28.8" fill="none" stroke="#c0392b" stroke-width="0.7" stroke-linecap="round"/>';
+    }else if(n===8){ // 8索：左右笔直竖竹（不外翻）+ 上半中间∧ + 下半中间∨（左右略收细、中间略加粗以平衡视觉）
+      // 上半：左右两根竖直细长竹节（标准长度，与2-6条一致）
+      s+=bamboo(4.4,9,false,10.5)+bamboo(17.6,9,false,10.5);
+      // 上半中间小竹节 + 两条斜线向内汇到中间高点（∧），中间加粗
+      s+='<line x1="11" y1="5.8" x2="11" y2="9.4" stroke="#1a8a4a" stroke-width="3" stroke-linecap="round"/>';
+      s+='<line x1="9.7" y1="5.8" x2="12.3" y2="5.8" stroke="#0f6b38" stroke-width="1.3" stroke-linecap="round"/>';
+      s+='<line x1="9.7" y1="9.4" x2="12.3" y2="9.4" stroke="#0f6b38" stroke-width="1.3" stroke-linecap="round"/>';
+      s+='<path d="M4.4 11.4 L11 9.4 L17.6 11.4" fill="none" stroke="#1a8a4a" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>';
+      // 下半：左右两根竖直细长竹节（标准长度）
+      s+=bamboo(4.4,21,false,10.5)+bamboo(17.6,21,false,10.5);
+      // 下半中间小竹节 + 两条斜线向内汇到中间低点（∨），中间加粗
+      s+='<line x1="11" y1="20.6" x2="11" y2="24.2" stroke="#1a8a4a" stroke-width="3" stroke-linecap="round"/>';
+      s+='<line x1="9.7" y1="20.6" x2="12.3" y2="20.6" stroke="#0f6b38" stroke-width="1.3" stroke-linecap="round"/>';
+      s+='<line x1="9.7" y1="24.2" x2="12.3" y2="24.2" stroke="#0f6b38" stroke-width="1.3" stroke-linecap="round"/>';
+      s+='<path d="M4.4 18.6 L11 20.6 L17.6 18.6" fill="none" stroke="#1a8a4a" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>';
+    }else{
+      const h=(n===7||n===9)?7.2:10.5; // 三行的7/9条竹节适当短，2-6条标准细长
+      SOU_FACE[n].forEach((p,k)=>{ s+=bamboo(p[0],p[1],p[2],h); });
+    }
+  }else{ // 字牌（参考图：风牌黑、中红、发绿、白为空白牌）
+    const j=i-27;
+    const col=j===4?'#a5271c':(j===5?'#0a6b34':'#0f1418'); // 颜色加深
+    if(j===6){ // 白：空白牌（无图案）
+      s+='<rect x="4.5" y="5.5" width="13" height="19" rx="1.2" fill="none" stroke="#e6dfca" stroke-width="1"/>';
+    }else{
+      // 中：固定字形下笔画偏繁，缩一号；其余常规字号
+      const small=(j===4);
+      const sz=small?18:20;
+      const by=small?21.8:22.3;
+      s+=fk(HON[j],11,by,sz,col);
+    }
+  }
+  return open+s+'</svg>';
+}
+// 局风/自风/宝牌状态
+let windRound=0, windSeat=0;        // 0东 1南 2西 3北（场风编码 = 27+v）
+let doraIndicators=[];              // 宝牌指示牌编码数组，最多 5 张
+const MAX_DORA=5;
+// 宝牌 = 指示牌的下一张：数牌按花色 1→9 循环；风 27-30 循环；三元 31→32→33→31（白→发→中→白）
+function nextTile(t){
+  if(t<27){const suit=Math.floor(t/9),r=t%9;return suit*9+(r===8?0:r+1);}
+  if(t<=30)return 27+((t-27+1)%4);   // 东南西北循环
+  return 31+((t-31+1)%3);            // 中发白循环
+}
+function doraTiles(){return doraIndicators.map(nextTile);}
+function isDora(t){return doraTiles().indexOf(t)>=0 || (gameMode===3&&t===30);} // 三麻北=宝牌
+function tileHTML(i,cls){
+  const d=isDora(i)?' dora':'';
+  return '<span class="tile '+tileClass(i)+' '+(cls||'')+d+'" title="'+TNAMES[i]+(isDora(i)?'（宝牌）':'')+'">'+tileFaceSVG(i)+'</span>';
+}
 
 let hand=[]; // 当前手牌编码数组
+let gameMode=4; // 4=四人麻将 3=三人麻将（三麻无 2-8万）
+function tileAllowed(t){
+  if(gameMode===3&&t>=1&&t<=7)return false; // 三麻屏蔽 2-8万（编码1-7）
+  return true;
+}
 
-// 构建选牌器
-(function(){
+// 构建选牌器（三麻时万子顺序：一萬、九萬在前，二~八萬灰色在后，说明文字放最后）
+function buildPicker(){
   const p=$('#picker');
+  p.innerHTML='';
   const groups=[['万',0,9],['饼',9,18],['索',18,27],['字',27,34]];
   groups.forEach(([g,a,b])=>{
     const d=document.createElement('div');d.className='group';
     d.innerHTML='<span class="group-label">'+g+'</span>';
-    for(let i=a;i<b;i++){
-      const s=document.createElement('span');s.className='tile '+tileClass(i);s.textContent=TNAMES[i];
-      s.onclick=()=>{
+    let seq=[];for(let i=a;i<b;i++)seq.push(i);
+    if(g==='万'&&gameMode===3)seq=[0,8,1,2,3,4,5,6,7]; // 1、9万在前，2-8万在后
+    seq.forEach(i=>{
+      const ok=tileAllowed(i);
+      const s=document.createElement('span');
+      s.className='tile '+tileClass(i)+(ok?'':' disabled')+(isDora(i)?' dora':'');
+      s.title=ok?(TNAMES[i]+(isDora(i)?'（宝牌）':'')):(TNAMES[i]+'（三人麻将无此牌）');
+      s.innerHTML=tileFaceSVG(i);
+      if(ok)s.onclick=()=>{
         if(hand.length>=14){alert('已经 14 张了。要换牌请先点下方手牌移除一张。');return;}
         hand.push(i);if(hand.length===14)selDiscard=null;renderHand();
       };
       d.appendChild(s);
+    });
+    // 三麻说明文字放在万子最后（八万之后）
+    if(g==='万'&&gameMode===3){
+      const note=document.createElement('span');
+      note.style.cssText='font-size:11px;color:var(--muted);margin-left:5px';
+      note.textContent='（三麻仅1、9万）';
+      d.appendChild(note);
     }
     p.appendChild(d);
   });
-})();
+}
+buildPicker();
+
+// 构建宝牌指示牌选择器（可多选，最多 MAX_DORA 张）
+function buildDoraPicker(){
+  const box=$('#doraPicker');box.innerHTML='';
+  for(let t=0;t<34;t++){
+    if(!tileAllowed(t))continue;
+    const s=document.createElement('span');
+    s.className='tile dora-pick small '+(doraIndicators.indexOf(t)>=0?'on':'');
+    s.innerHTML=tileFaceSVG(t);
+    s.title='指示牌：'+TNAMES[t]+' → 宝牌 '+TNAMES[nextTile(t)];
+    s.onclick=()=>{
+      const k=doraIndicators.indexOf(t);
+      if(k>=0)doraIndicators.splice(k,1);
+      else if(doraIndicators.length<MAX_DORA)doraIndicators.push(t);
+      else{alert('最多只能选 '+MAX_DORA+' 张宝牌指示牌。');return;}
+      doraIndicators.sort((a,b)=>a-b);
+      buildDoraSlots();buildDoraPicker();refreshDoraInfo();buildPicker();renderHand();
+    };
+    box.appendChild(s);
+  }
+}
+// 渲染固定 5 个指示牌位：已选显示牌面（点击取消），未选显示牌背
+function buildDoraSlots(){
+  const box=$('#doraSlots');box.innerHTML='';
+  for(let k=0;k<MAX_DORA;k++){
+    const t=doraIndicators[k];
+    const slot=document.createElement('span');
+    slot.className='dora-slot'+(t!==undefined?' filled':'');
+    if(t!==undefined){
+      const tile=document.createElement('span');
+      tile.className='tile '+tileClass(t)+' small';
+      tile.innerHTML=tileFaceSVG(t);
+      tile.title='指示牌 '+TNAMES[t]+' → 宝牌 '+TNAMES[nextTile(t)]+'（点击取消）';
+      tile.onclick=()=>{
+        doraIndicators.splice(k,1);
+        buildDoraSlots();buildDoraPicker();refreshDoraInfo();buildPicker();renderHand();
+      };
+      slot.appendChild(tile);
+    }else{
+      const back=document.createElement('span');
+      back.className='tile tile-back small';
+      back.title='待选指示牌位';
+      slot.appendChild(back);
+    }
+    box.appendChild(slot);
+  }
+}
+$('#doraToggle').onclick=()=>{
+  const w=$('#doraPickerWrap'),open=w.style.display!=='none';
+  w.style.display=open?'none':'block';
+  $('#doraToggle').textContent=open?'选牌 ▾':'收起 ▴';
+};
+$('#doraClear').onclick=()=>{doraIndicators=[];buildDoraSlots();buildDoraPicker();refreshDoraInfo();buildPicker();renderHand();};
+function refreshDoraInfo(){
+  const el=$('#doraInfo');
+  if(!doraIndicators.length){el.textContent='展开「选牌」点最多 '+MAX_DORA+' 张指示牌，自动算宝牌并标金色（宝牌=指示牌下一张）';return;}
+  const inds=doraIndicators.map(t=>TNAMES[t]).join('、');
+  const doras=[...new Set(doraTiles().map(t=>TNAMES[t]))].join('、');
+  el.innerHTML='指示牌 <b>'+inds+'</b> → 宝牌 <b style="color:var(--gold)">'+doras+'</b>（'+doraIndicators.length+'/'+MAX_DORA+'）'+(gameMode===3?'；三麻北风也计为宝牌':'');
+}
+buildDoraSlots();buildDoraPicker();refreshDoraInfo();
+
+// 场风 / 自风切换：影响役牌判断与打牌推荐
+document.querySelectorAll('.wind-btn').forEach(btn=>btn.onclick=()=>{
+  const kind=btn.dataset.wind,v=+btn.dataset.v;
+  if(kind==='round')windRound=v;else windSeat=v;
+  document.querySelectorAll('.wind-btn[data-wind="'+kind+'"]').forEach(x=>x.classList.toggle('on',x===btn));
+  if(hand.length)calc(); // 重新渲染役种建议
+});
+function windYakuPai(){
+  // 返回算作役牌的风牌编码（场风+自风，去重）
+  return [...new Set([27+windRound,27+windSeat])];
+}
+
+// 模式切换
+document.querySelectorAll('.mode-btn').forEach(btn=>btn.onclick=()=>{
+  const m=+btn.dataset.mode;
+  if(m===gameMode)return;
+  gameMode=m;
+  document.querySelectorAll('.mode-btn').forEach(x=>x.classList.toggle('on',x===btn));
+  $('#modeNote').textContent=m===3
+    ?'三麻：无2-8万·不可吃·无三色同顺·北可拔北当宝牌'
+    :'四麻：1-9万齐全，可吃，有三色同顺';
+  // 切换时移除手牌中三麻不存在的牌
+  if(m===3){
+    const before=hand.length;
+    hand=hand.filter(t=>tileAllowed(t));
+    if(hand.length!==before)alert('三人麻将没有 2-8万，已从手牌中移除。');
+  }
+  selDiscard=null;
+  // 三麻时移除 2-8万 的指示牌
+  if(m===3){
+    const before=doraIndicators.length;
+    doraIndicators=doraIndicators.filter(t=>tileAllowed(t));
+    if(doraIndicators.length!==before)alert('三人麻将没有 2-8万，已移除对应的宝牌指示牌。');
+  }
+  buildDoraSlots();buildDoraPicker();refreshDoraInfo();
+  buildPicker();
+  renderHand();
+});
 
 function renderHand(){
   const box=$('#hand');
@@ -242,8 +610,8 @@ function renderHand(){
   else{
     box.innerHTML='';
     hand.slice().sort((a,b)=>a-b).forEach(v=>{
-      const s=document.createElement('span');s.className='tile sel '+tileClass(v);s.textContent=TNAMES[v];
-      s.title='点击移除';s.onclick=()=>{hand.splice(hand.indexOf(v),1);renderHand();};
+      const s=document.createElement('span');s.className='tile sel '+tileClass(v)+(isDora(v)?' dora':'');s.innerHTML=tileFaceSVG(v);
+      s.title=TNAMES[v]+(isDora(v)?'（宝牌）':'')+'（点击移除）';s.onclick=()=>{hand.splice(hand.indexOf(v),1);renderHand();};
       box.appendChild(s);
     });
   }
@@ -308,9 +676,50 @@ function chiitoiShanten(c){let pairs=0,kinds=0;for(let i=0;i<34;i++){if(c[i]>=2)
 function kokushiShanten(c){const y=[0,8,9,17,18,26,27,28,29,30,31,32,33];let kinds=0,pair=0;for(const t of y){if(c[t]>=1)kinds++;if(c[t]>=2)pair=1;}return 13-kinds-pair;}
 function shantenOf(c){return Math.min(standardShanten(c),chiitoiShanten(c),kokushiShanten(c));}
 function usefulTiles(c,cur){
-  const res=[];for(let t=0;t<34;t++){if(c[t]>=4)continue;c[t]++;if(shantenOf(c)<cur)res.push(t);c[t]--;}return res;
+  const res=[];for(let t=0;t<34;t++){
+    if(!tileAllowed(t))continue;      // 三麻无 2-8万，不能作为进张
+    if(c[t]>=4)continue;
+    c[t]++;if(shantenOf(c)<cur)res.push(t);c[t]--;
+  }return res;
 }
 function shText(sh){return sh<0?'和牌':sh===0?'听牌':sh+' 向听';}
+
+// 牌效率形状判定（参照「立直麻将牌效率速查表」）
+// 返回这张牌在完整手牌里扮演的形状角色，用于出张评语
+function tileShape(t,c){
+  const cnt=c[t];const isNum=t<27;const suit=Math.floor(t/9);const r=t%9;
+  const has=k=>k>=0&&k<9&&c[suit*9+k]>0;
+  if(!isNum){
+    const dora=isDora(t), yakuPai=(t>=31)||windYakuPai().indexOf(t)>=0;
+    if(cnt>=2){
+      if(dora)return {name:'宝牌对子',eff:'碰/雀头',adv:'宝牌对子价值高，可碰成刻或留作雀头，别轻易拆',keep:1,bonus:3};
+      if(yakuPai)return {name:'役牌对子',eff:'碰即役',adv:'场风/自风/三元对子，碰出即成役，值得留',keep:1,bonus:2};
+      return {name:'对子',eff:'2张',adv:'可成雀头，早巡可拆晚巡保留',keep:1};
+    }
+    if(dora)return {name:'宝牌',eff:'—',adv:'宝牌本身加番，单张也可留作搭子/雀头待摸对',keep:1,bonus:1};
+    if(t>=31)return {name:'役牌·三元',eff:'—',adv:'碰牌即成役，值得留',keep:1};
+    if(windYakuPai().indexOf(t)>=0)return {name:'役牌·场/自风',eff:'—',adv:'当前场风或自风，碰牌即成役，值得留',keep:1};
+    if(gameMode===3&&t===30)return {name:'北·可拔北',eff:'宝牌',adv:'三麻拔北=1番宝牌',keep:1};
+    return {name:'客风牌',eff:'0张',adv:'无役无搭无价值，早巡必舍',keep:0};
+  }
+  if(cnt>=2){
+    if(isDora(t))return {name:'宝牌对子',eff:'碰/雀头',adv:'宝牌对子价值高，碰成刻子或留雀头都划算，别轻易拆',keep:1,bonus:3};
+    return {name:'对子',eff:'2张',adv:'可成雀头，早巡可拆晚巡保留',keep:1};
+  }
+  let lo=r,hi=r;while(lo>0&&has(lo-1))lo--;while(hi<8&&has(hi+1))hi++;
+  const runLen=hi-lo+1;
+  if(runLen>=4)return {name:'四面搭子',eff:'16张',adv:'绝对保留，多搭重叠优化潜力高',keep:1};
+  if(runLen===3)return {name:'三面搭子',eff:'12张',adv:'进张极广，全阶段保留',keep:1};
+  const gapL=r>=2&&has(r-2)&&!has(r-1),gapR=r<=6&&has(r+2)&&!has(r+1);
+  if(gapL||gapR)return {name:'嵌张搭子',eff:'4张',adv:'进张少可拆，早巡留晚巡舍',keep:0};
+  if(runLen===2){
+    if(lo===0||hi===8)return {name:'边张搭子',eff:'4张',adv:'仅听一种不易改良，优先舍弃',keep:0};
+    return {name:'两面搭子',eff:'8张',adv:'保留搭子，可向高价值听牌发展',keep:1};
+  }
+  if(r===0||r===8)return {name:'孤立幺九',eff:'0~2张',adv:'仅能成边张或雀头，最高优先早巡必舍',keep:0};
+  if(r===1||r===7)return {name:'孤立2/8',eff:'2~4张',adv:'可成边张或嵌张，中优先早巡舍',keep:0};
+  return {name:'中张单张',eff:'8~12张',adv:'周围有搭子则留，否则可打',keep:2};
+}
 
 // 14 张复盘：逐张试打，按「向听少 → 进张多」排序
 function analyzeDiscards(h){
@@ -318,13 +727,16 @@ function analyzeDiscards(h){
   const counts=countToArray(h);
   const uniq=[...new Set(h)].sort((a,b)=>a-b);
   const rows=uniq.map(t=>{
+    const shape=tileShape(t,counts);
     const c=counts.slice();c[t]--;            // 打出这一张后的 13 张
     const sh=shantenOf(c);
     const waits=usefulTiles(c,sh);
     let total=0;waits.forEach(w=>{total+=4-counts[w];}); // 打出的牌已进牌河，故用原计数扣可见张
-    return {tile:t,sh,waits,total,kinds:waits.length};
+    return {tile:t,sh,waits,total,kinds:waits.length,shape};
   });
-  rows.sort((a,b)=>a.sh-b.sh || b.total-a.total || b.kinds-a.kinds || a.tile-b.tile);
+  // 排序：向听少 → 进张多 → 种类多 → 形状优先级（早巡必舍的排前）→ 宝牌/役牌权重（高价值牌的打出往后排）
+  rows.forEach(r=>r.bonus=r.shape.bonus||0);
+  rows.sort((a,b)=>a.sh-b.sh || b.total-a.total || b.kinds-a.kinds || a.shape.keep-b.shape.keep || a.bonus-b.bonus || a.tile-b.tile);
   return rows;
 }
 
@@ -344,6 +756,11 @@ function reasonText(rows){
   }
   if(best.waits.length){
     s+=' 进张是 '+best.waits.slice(0,6).map(t=>TNAMES[t]).join('、')+(best.waits.length>6?'等':'')+'，摸到即可推进。';
+  }
+  // 宝牌提醒：若次优以外的打法要打掉宝牌对子/刻子，提醒用户权衡
+  const doraDiscards=rows.filter(r=>r.bonus>=3);
+  if(doraDiscards.length){
+    s+=' <b style="color:var(--gold)">注意：打 '+doraDiscards.map(r=>TNAMES[r.tile]).join('、')+' 会拆掉宝牌对子，虽然牌效率排前，但会损失宝牌价值，做混一色/对对和时可考虑改留。</b>';
   }
   return s;
 }
@@ -378,6 +795,20 @@ function suggestYaku(c){
   else if(dragonComplete>=2&&dragonPair>=3) add('小三元','2番');
   else if(dragonComplete>=1) add('役牌·三元牌','1番');
 
+  // 场风 / 自风刻子算役牌（按当前设置的场风、自风判断）
+  const yp=windYakuPai();
+  const windNames=['东','南','西','北'];
+  const windComplete=yp.filter(i=>n(i)>=3);
+  windComplete.forEach(i=>{
+    const label=(i===27+windRound?'场风':'自风')+windNames[i-27];
+    add('役牌·'+label,'1番');
+  });
+  // 宝牌提示（不是役，但计入打牌决策）
+  if(doraTiles().length){
+    const dt=doraTiles()[0];
+    add('宝牌×'+n(dt)+'（'+TNAMES[dt]+'）','番外',false);
+  }
+
   // 幺九 / 老头
   const ya=[0,8,9,17,18,26,27,28,29,30,31,32,33];
   const allYao=ya.every(i=>n(i)>0);
@@ -407,8 +838,8 @@ function suggestYaku(c){
   for(let s=0;s<3;s++){
     if(n(s*9)&&n(s*9+1)&&n(s*9+2)&&n(s*9+3)&&n(s*9+4)&&n(s*9+5)&&n(s*9+6)&&n(s*9+7)&&n(s*9+8)){add('一气通贯','2番');break;}
   }
-  // 三色同顺
-  for(let r=0;r<=6;r++){
+  // 三色同顺（三麻无 2-8万，不成立）
+  if(gameMode===4)for(let r=0;r<=6;r++){
     if(n(r)&&n(r+1)&&n(r+2)&&n(9+r)&&n(9+r+1)&&n(9+r+2)&&n(18+r)&&n(18+r+1)&&n(18+r+2)){add('三色同顺','2番');break;}
   }
   // 平和倾向：4 组顺子 + 雀头、无字牌、无刻子，且非七对路线
@@ -430,8 +861,11 @@ function renderDiscardBoard(rows){
   // 右侧出张按钮
   let btns='<div class="discard-btns">';
   rows.forEach((r,i)=>{
-    btns+='<button class="discard-btn'+(r.tile===selDiscard?' on':'')+'" data-t="'+r.tile+'">'
-      +'<span class="rk">'+(i+1)+'</span>'+tileHTML(r.tile)+'</button>';
+    const sh=r.shape;
+    const shColor=sh.keep===1?'#1b7a3a':(sh.keep===0?'#c0392b':'#6b7b82');
+    btns+='<button class="discard-btn'+(r.tile===selDiscard?' on':'')+'" data-t="'+r.tile+'" title="'+sh.name+'：'+sh.adv+'（理论进张'+sh.eff+'）">'
+      +'<span class="rk">'+(i+1)+'</span>'+tileHTML(r.tile)
+      +'<span class="shape-mini" style="color:'+(r.tile===selDiscard?'#fff':shColor)+'">'+sh.name+'</span></button>';
   });
   btns+='</div>';
 
@@ -456,6 +890,15 @@ function renderDiscardBoard(rows){
   if(rank===1) verdict='这是当前 <b class="best">优先级最高</b> 的打法：'+reasonText(rows);
   else verdict='你选的是第 <b>'+rank+'</b> 顺位打法。最优是打 <b class="best">'+TNAMES[rows[0].tile]+'</b>。'+reasonText(rows);
 
+  // 形状详解（当前选中的出张牌）
+  const shape=cur.shape;
+  const shapeBox='<div class="shape-box">'
+    +'<b>形状判定：'+shape.name+'</b>'
+    +' <span style="color:var(--muted)">· 理论进张 '+shape.eff+'</span>'
+    +'<br>牌效率建议：'+shape.adv
+    +'<br><span style="color:var(--muted);font-size:11.5px">形状评语依据「立直麻将牌效率速查表」：早巡该舍的孤立牌优先打，成形的两面/三面搭子尽量保留；早巡与晚巡的取舍请自行按场况调整。</span>'
+    +'</div>';
+
   board.innerHTML='<div class="board">'
     +'<div class="board-head"><h3>打牌分析</h3><span class="tag">点右侧出张按钮，左侧进张与役种随之更新</span></div>'
     +'<div class="board-cols">'
@@ -464,8 +907,9 @@ function renderDiscardBoard(rows){
       +'<div class="board-col"><h4>出张按钮（按优先级）</h4>'+btns+'</div>'
     +'</div>'
     +'<div class="verdict">'+verdict+'</div>'
+    +shapeBox
     +'<div class="yaku-sugg"><h4>建议役种方向（按打完的手牌结构推断，仅供参考）</h4><div class="yaku-pills">'+pills+'</div></div>'
-    +'<div class="hint">排序：先看打完后的向听数（少者优先），再看进张枚数（多者优先）。役种番数按雀魂常见规则标注，实际能否成立还受副露、场风、自风、立直等影响；进张枚数未计入他家手牌与牌河。</div>'
+    +'<div class="hint">排序：先看打完后的向听数（少者优先），再看进张枚数（多者优先），同分时按形状优先级（早巡该舍的孤立牌在前）。'+(gameMode===3?'<b>三麻模式</b>：已排除2-8万，不提示三色同顺，北可作宝牌。':'')+' 已按上方<b>场风/自风</b>判断风牌役牌、按<b>宝牌指示牌</b>高亮宝牌并加权保留；宝牌对子虽可能被牌效率排在前面，拆与不拆请结合做牌方向权衡。役种番数按雀魂常见规则标注，实际能否成立还受副露、立直等影响；进张枚数未计入他家手牌与牌河。</div>'
     +'</div>';
 
   board.querySelectorAll('.discard-btn').forEach(b=>b.onclick=()=>{selDiscard=+b.dataset.t;renderDiscardBoard(rows);});
@@ -548,25 +992,52 @@ const YAKU=[
 ['清一色','6番',0,'standard','全部为同一种数牌，无字牌。'],
 ['大三元','役满',0,'standard','中发白三组刻子。'],
 ['小四喜','役满',0,'standard','三种风牌刻子+第四种风牌雀头。'],
-['大四喜','役满',0,'standard','东南西北四组风牌刻子。（常按双倍役满）'],
+['大四喜','双倍役满',0,'standard','东南西北四组风牌刻子。'],
 ['字一色','役满',0,'standard','全部由字牌组成。'],
 ['清老头','役满',0,'standard','全部由1、9数牌组成。'],
 ['四暗刻','役满',1,'standard','四组暗刻。'],
 ['国士无双','役满',1,'standard','十三种幺九字牌各一+任一重复。'],
 ['九莲宝灯','役满',1,'standard','同花色1112345678999+任一张。'],
 ['绿一色','役满',0,'standard','全由绿色牌组成（索23468、发）。'],
-['四杠子','役满',0,'standard','四组杠子。'],
-['天和','役满',1,'standard','庄家起手14张即和牌。'],
-['地和','役满',1,'standard','闲家第一巡自摸。'],
-['流局满贯','特殊',1,'standard','荒牌流局且自家打出全为幺九字牌、无人鸣牌。'],
-['黑一色','役满',0,'ancient','由2/4/8饼和风牌组成的对对和或七对子。古役，雀魂不成立。'],
-['红一色','役满',0,'ancient','由1/5/9饼及中、三元牌组成的对对和。古役，雀魂不成立。'],
-['四连刻','役满',0,'ancient','同花色四个连续数字的刻子。古役，雀魂不成立。'],
-['三连刻','2番',0,'ancient','同花色三个连续数字的刻子。古役，雀魂不成立。'],
-['大车轮','役满',1,'ancient','2-8筒各两张的七对子。古役，雀魂不成立。'],
-['百万石','役满',0,'ancient','万子清一色且合计点数达10万。古役，雀魂不成立。'],
-['东北自动车道','役满',0,'ancient','东与北的刻子+索子123+456的混一色。古役，雀魂不成立。']
+['四杠子','役满',0,'standard','一人开杠4次。'],
+['天和','役满',1,'standard','庄家配牌14张即为和牌状态。'],
+['地和','役满',1,'standard','轮到自己前无人鸣牌的状态下第一巡自摸和牌。'],
+['四暗刻单骑','双倍役满',1,'standard','四暗刻以单骑（雀头单钓）方式和牌。门前清限定。'],
+['国士无双十三面','双倍役满',1,'standard','国士无双的13面听（13种幺九字牌全听）和牌。门前清限定。'],
+['纯正九莲宝灯','双倍役满',1,'standard','九莲宝灯的9面听，1112345678999+任一张和牌。门前清限定。'],
+['流局满贯','流局',1,'standard','荒牌流局且自家打出全为幺九字牌、无人鸣牌。'],
+['四风连打','流局',0,'standard','无人鸣牌时四人第一巡都打出同一种风牌。'],
+['四杠散了','流局',0,'standard','2人以上合计开杠4次而流局。'],
+['九种九牌','流局',1,'standard','第一巡轮到自己前无人鸣牌，手中已有9种及以上幺九牌。'],
+['四家立直','流局',0,'standard','4人全部宣告立直成功。'],
+['宝牌','番外',0,'extra','宝牌指示牌的下一张牌，每张宝牌加1番（不计入役，不能单独和牌）。'],
+['赤宝牌','番外',0,'extra','红色的5万/5饼/5索，每张算1枚宝牌。'],
+['北宝牌','番外',0,'extra','三人麻将中风牌被拔北后，北风可当作宝牌（不计入手牌役）。'],
+['三连刻','2番',0,'ancient','同花色三个连续数字的刻子。'],
+['大车轮','役满',1,'ancient','由筒子2-8各两张组成的七对子。'],
+['一色三同顺','3番',0,'ancient','同花色三组完全相同的顺子。'],
+['五门齐','2番',0,'ancient','包含万、饼、索、风牌、三元牌五类牌。'],
+['一筒摸月','1番',0,'ancient','海底摸月且和牌张为1饼。'],
+['九筒捞鱼','1番',0,'ancient','河底捞鱼且和牌张为9饼。'],
+['大七星','役满',1,'ancient','七种字牌各两张组成的七对子。'],
+['燕返','1番',0,'ancient','荣和别家立直宣言牌（仅第一张宣言牌）。'],
+['杠振','1番',0,'ancient','别家杠完后打出一张牌时自家荣和。'],
+['十二落抬','1番',0,'ancient','四副露状态下自摸或荣和。'],
+['人和','役满',1,'ancient','身为子家，第一巡无人鸣牌时轮到自己摸牌前荣和。'],
+['大竹林','役满',1,'ancient','由索子2-8各两张组成的七对子。'],
+['大数邻','役满',1,'ancient','由万子2-8各两张组成的七对子。'],
+['石上三年','役满',1,'ancient','两立直+海底摸月，或两立直+河底捞鱼。'],
 ];
+// 古役右上角标签（按雀魂役种一览截图逐条核对）
+const ANCIENT_TAG={
+ '三连刻':'段位场不使用','大车轮':'门前清限定，段位场不使用',
+ '一色三同顺':'副露减1番，段位场不使用','五门齐':'段位场不使用',
+ '一筒摸月':'段位场不使用','九筒捞鱼':'段位场不使用',
+ '大七星':'门前清限定，段位场不使用','燕返':'段位场不使用',
+ '杠振':'段位场不使用','十二落抬':'段位场不使用',
+ '人和':'门前清限定，段位场不使用','大竹林':'门前清限定，段位场不使用',
+ '大数邻':'门前清限定，段位场不使用','石上三年':'门前清限定，段位场不使用'
+};
 // 每个役种的示例手牌（快捷码），用方块展示，能认出牌即可
 const YAKU_DEMO={
 '立直':'234567m234p234s55s','一发':'234567m234p234s55s','门前清自摸和':'234567m234p234s55s',
@@ -582,20 +1053,61 @@ const YAKU_DEMO={
 '字一色':'东东东南南南北北北中中中发发','清老头':'111m999m111p999p11s','四暗刻':'111m222m333p444s55s',
 '国士无双':'19m19p19s东南西北中发白东','九莲宝灯':'1112345678999m5m','绿一色':'234s666s888s234s发发',
 '四杠子':'111m222m333p444s55s','天和':'234567m234p234s55s','地和':'234567m234p234s55s',
-'流局满贯':'19m19p19s东东南南西西北北中中发发','黑一色':'22p44p88p东东南南北北西西',
-'红一色':'11p55p99p中中中发发发白白','四连刻':'111m222m333m444m55p','三连刻':'111m222m333m456p55p',
-'大车轮':'22334455667788p','百万石':'999m888m777m666m555m99m','东北自动车道':'东东东北北北123s456s55s'
+'四暗刻单骑':'111m222m333p444s55s','国士无双十三面':'19m19p19s东南西北中发白东','纯正九莲宝灯':'1112345678999m5m',
+'流局满贯':'19m19p19s东东南南西西北北中中发发','四风连打':'北北北北','四杠散了':'1111m2222p3333s东东',
+'九种九牌':'19m19p19s东南西北中发白','四家立直':'东东东','宝牌':'234567m234p234s55s','赤宝牌':'234567m234p234s55s','北宝牌':'北',
+'三连刻':'111m222m333m456p55p','大车轮':'22334455667788p','一色三同顺':'123m123m123m456p55p',
+'五门齐':'123m456p789s东东东中中','一筒摸月':'234567m234p234s11p','九筒捞鱼':'234567m234p234s99p',
+'大七星':'东东南南西西北北中中发发白白','燕返':'234567m234p234s55s','杠振':'234567m234p234s55s','十二落抬':'23m23p23s东东南南北北中中',
+'人和':'234567m234p234s55s','大竹林':'22334455667788s','大数邻':'22334455667788m','石上三年':'234567m234p234s55s'};
+// 汉字→拼音首字母（覆盖役种名用字），支持 lz→立直 这类首字母检索
+const PYINIT={
+'立':'l','直':'z','一':'y','发':'f','门':'m','前':'q','清':'q','自':'z','摸':'m','和':'h',
+'断':'d','幺':'y','九':'j','杯':'b','口':'k','平':'p','役':'y','牌':'p','三':'s','元':'y',
+'场':'c','风':'f','岭':'l','上':'s','开':'k','花':'h','抢':'q','杠':'g','海':'h','底':'d',
+'月':'y','河':'h','捞':'l','鱼':'y','两':'l','七':'q','对':'d','子':'z','暗':'a','刻':'k',
+'色':'s','同':'t','小':'x','混':'h','老':'l','头':'t','气':'q','通':'t','贯':'g','全':'q',
+'带':'d','纯':'c','喜':'x','四':'s','字':'z','国':'g','士':'s','无':'w','双':'s','莲':'l',
+'宝':'b','灯':'d','绿':'l','天':'t','单':'d','骑':'q','十':'s','面':'m','流':'l','局':'j',
+'满':'m','连':'l','打':'d','散':'s','了':'l','种':'z','家':'j','赤':'c','北':'b','筒':'t',
+'五':'w','燕':'y','返':'f','振':'z','二':'e','落':'l','抬':'t','人':'r','竹':'z','数':'s',
+'邻':'l','石':'s','年':'n','正':'z','杯':'b','素':'s','庄':'z','闲':'x',
+'车':'c','轮':'l','门':'m','连':'l','杠':'g','振':'z',
+'地':'d','大':'d','星':'x','林':'l','顺':'s','齐':'q'
 };
+function pyInit(name){return name.replace(/[（）()·\s]/g,'').split('').map(c=>PYINIT[c]||'').join('');}
+// 同行联动：展开/收起一个役种详情时，同一网格行的其他详情一起展开/收起（避免整行只有一张卡片显示详细牌面）
+let yakuSyncing=false;
+function syncYakuRow(src){
+  const all=[...$('#yakuGrid').querySelectorAll('details')];
+  const top=src.offsetTop;
+  all.forEach(o=>{
+    if(o===src)return;
+    if(Math.abs(o.offsetTop-top)<3 && o.open!==src.open)o.open=src.open;
+  });
+}
 function renderYaku(filter){
   const f=(filter||'').trim();const g=$('#yakuGrid');g.innerHTML='';
-  const list=YAKU.filter(y=>!f||y[0].includes(f)||y[4].includes(f)||(y[1]==='役满'&&f==='役满'));
+  const lower=f.toLowerCase(), isAbbr=/^[a-z]+$/.test(lower);
+  const list=YAKU.filter(y=>!f||y[0].includes(f)||y[4].includes(f)||(y[1]==='役满'&&f==='役满')
+    ||(isAbbr&&(pyInit(y[0]).includes(lower)||y[0].split('').map(c=>PYINIT[c]||'').join('').includes(lower))));
   list.forEach(y=>{
     const d=document.createElement('details');
-    let badge=y[3]==='ancient'?'<span class="badge ancient">古役·雀魂不成立</span>'
-      :(y[1]==='役满'?'<span class="badge ym">役满</span>':'<span class="badge han">'+y[1]+'</span>');
+    const isAncient=y[3]==='ancient';
+    const title=isAncient?('古役·'+y[0]):y[0];
+    let badge=isAncient?'<span class="badge ancient">'+ANCIENT_TAG[y[0]]+'</span>'
+      :(y[1]==='双倍役满'?'<span class="badge dbl">双倍役满</span>'
+      :(y[1]==='役满'?'<span class="badge ym">役满</span>'
+      :(y[1]==='流局'?'<span class="badge ryu">流局</span>'
+      :(y[1]==='番外'?'<span class="badge extra">番外·宝牌</span>'
+      :'<span class="badge han">'+y[1]+'</span>'))));
     let demo='';
     if(YAKU_DEMO[y[0]]) demo='<div class="demo"><span class="demo-label">示例牌：</span>'+parseHand(YAKU_DEMO[y[0]]).map(t=>tileHTML(t,'small')).join('')+'</div>';
-    d.innerHTML='<summary><span>'+y[0]+'</span>'+badge+'</summary><div class="body">'+y[4]+(y[2]?'<br>门清限定':'')+demo+'</div>';
+    d.innerHTML='<summary><span>'+title+'</span>'+badge+'</summary><div class="body">'+y[4]+(y[2]&&!isAncient?'<br>门清限定':'')+demo+'</div>';
+    d.addEventListener('toggle',()=>{
+      if(yakuSyncing)return;
+      yakuSyncing=true;syncYakuRow(d);yakuSyncing=false;
+    });
     g.appendChild(d);
   });
   if(!list.length)g.innerHTML='<p class="sub">没有匹配的役种</p>';
