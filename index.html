@@ -55,6 +55,11 @@
   .waits{margin-top:10px;font-size:13px}
   .wait-tile{display:inline-flex;flex-direction:column;align-items:center;margin:3px 5px 0 0}
   .wait-tile .cnt{font-size:11px;color:var(--muted);margin-top:1px}
+  .pick-wait{cursor:pointer;border-radius:7px;padding:2px 3px;transition:.12s}
+  .pick-wait:hover{background:#fff2cf}
+  .pick-wait:hover .cnt{color:var(--gold);font-weight:700}
+  .tile.clickable{cursor:pointer;transition:.12s}
+  .tile.clickable:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(0,0,0,.15);border-bottom-color:var(--gold)}
   .statline{font-size:13px;color:var(--muted);margin-top:8px}
   .searchbar{display:flex;gap:8px;margin-bottom:14px}
   .yaku-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
@@ -140,7 +145,7 @@
   <!--pnid:Zxqr5APPuhIWSlFC6HbQOu--><!-- 牌效率 -->
   <div data-page-node-id="lyyTr6T0CEuQEHUadmAtV7" class="panel on" id="p1">
     <h2 data-page-node-id="9YTPrsJvsROtrCe6V0uFR8"><!--pnid:81f6pHRAxELxmT8aCdFtEF-->牌效率计算器</h2>
-    <div data-page-node-id="fkcucezC4bmfDAUBLiJ4iQ" class="sub"><!--pnid:Cr6Vx5WPKlP9E3E70ClfsT-->13 张看进张；输到 14 张（＝当时手牌＋摸到的牌）自动出打牌建议。点牌加入，点已选手牌移除。</div>
+    <div data-page-node-id="fkcucezC4bmfDAUBLiJ4iQ" class="sub"><!--pnid:Cr6Vx5WPKlP9E3E70ClfsT-->13 张看进张：<b>直接点下方「有效进张」的牌</b>，就当作摸到它，立刻出打牌建议与役种。也可点上方牌加入、点已选手牌移除。</div>
     <div data-page-node-id="vw2div0eKLswiSkf3lQePm" id="picker"></div>
     <div data-page-node-id="cOQmWXGgrDF1upJ79zQg3f" class="input-row">
       <input data-page-node-id="B7UwFnC3VA0g5RRFkMNyR7" id="handInput" placeholder="快捷输入，如 123m456p789s东东 或 1112345678999m" type="text">
@@ -490,13 +495,20 @@ function calc(){
   let html='<div class="shanten">'+(sh===0?'听牌':sh+' 向听')+' <small>'+(sh===0?'可以和牌了':'再进 '+sh+' 步听牌')+'</small></div>';
   if(hand.length===13){
     const waits=usefulTiles(c,sh);
-    let total=0;const items=waits.map(t=>{const rem=4-c[t];total+=rem;return '<div class="wait-tile">'+tileHTML(t,'small win')+'<span class="cnt">余'+rem+'</span></div>';}).join('');
-    html+='<div class="waits"><b>有效进张：</b>'+(items||'无')+'</div>';
-    html+='<div class="statline">共 <b>'+total+'</b> 枚进张 · '+waits.length+' 种牌</div>';
+    let total=0;const items=waits.map(t=>{const rem=4-c[t];total+=rem;return '<div class="wait-tile pick-wait" data-t="'+t+'" title="点此模拟摸到'+TNAMES[t]+'">'+tileHTML(t,'small win clickable')+'<span class="cnt">余'+rem+'</span></div>';}).join('');
+    html+='<div class="waits"><b>有效进张（可直接点选摸入）：</b>'+(items||'无')+'</div>';
+    html+='<div class="statline">共 <b>'+total+'</b> 枚进张 · '+waits.length+' 种牌 · 点上方进张牌即可摸入并看打牌建议</div>';
   }else if(hand.length<13){
     html+='<div class="statline">再补 '+(13-hand.length)+' 张到 13 张即可算进张</div>';
   }
   box.innerHTML=html;
+  // 13 张时：点「有效进张」牌 → 摸入成为第 14 张 → 联动出打牌建议
+  box.querySelectorAll('.pick-wait').forEach(el=>el.onclick=()=>{
+    if(hand.length!==13)return;
+    hand.push(+el.dataset.t);
+    selDiscard=null;
+    renderHand();
+  });
 }
 
 $('#importBtn').onclick=()=>{const p=parseHand($('#handInput').value);if(!p.length){alert('没识别到有效牌。格式示例：123m456p789s东东');return;}hand=p.slice(0,14);selDiscard=null;renderHand();};
