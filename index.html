@@ -16,7 +16,6 @@
   header{background:linear-gradient(135deg,var(--green-d),var(--green));color:#fff;padding:26px 20px 22px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.1)}
   header h1{font-size:22px;letter-spacing:1px}
   header p{font-size:13px;opacity:.85;margin-top:6px}
-  .notice{max-width:980px;margin:14px auto 0;background:var(--red-l);border:1px solid #f3c9c5;color:#8e2d22;font-size:12.5px;border-radius:8px;padding:9px 14px;text-align:center}
   .wrap{max-width:980px;margin:0 auto;padding:0 16px}
   .tabs{display:flex;gap:6px;margin:18px 0 16px;flex-wrap:wrap;justify-content:center}
   .tab{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:9px 18px;cursor:pointer;font-size:14px;color:var(--muted);transition:.15s}
@@ -97,54 +96,60 @@
   .import-box textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px;font-family:inherit;font-size:12px;resize:vertical}
   .demo{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line)}
   .demo-label{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}
-  .draw-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0 12px;padding:10px;background:#fff8e8;border:1px solid #f0dca0;border-radius:9px}
-  .draw-label{font-size:12.5px;color:#96680f;font-weight:600}
-  .rank{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#eef2f0;color:var(--muted);font-size:12px;font-weight:700}
-  .rank.top{background:var(--green);color:#fff}
-  .rank.second{background:var(--green-l);color:var(--green-d)}
-  .rec-summary{background:#fff;border:1px solid #c7e6d3;border-radius:9px;padding:11px 13px;margin-bottom:12px;font-size:13.5px;line-height:1.9}
-  .rec-summary b.best{color:var(--green-d)}
+  .board{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
+  .board-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+  .board-head h3{font-size:14px;color:var(--green-d)}
+  .board-head .tag{font-size:11.5px;color:var(--muted)}
+  .board-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .board-col{background:#fafcfb;border:1px solid var(--line);border-radius:10px;padding:12px}
+  .board-col h4{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:9px}
+  .discard-btns{display:flex;flex-wrap:wrap;gap:6px}
+  .discard-btn{display:flex;align-items:center;gap:5px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 9px;cursor:pointer;font-size:12.5px;color:var(--ink);transition:.15s}
+  .discard-btn:hover{border-color:var(--green)}
+  .discard-btn.on{background:var(--green);color:#fff;border-color:var(--green)}
+  .discard-btn .rk{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:#eef2f0;color:var(--muted);font-size:10px;font-weight:700}
+  .discard-btn.on .rk{background:rgba(255,255,255,.25);color:#fff}
+  .discard-btn .mini{font-size:10px;opacity:.75}
+  .in-tiles{min-height:38px}
+  .in-sum{font-size:12px;color:var(--muted);margin-top:7px}
+  .yaku-sugg{margin-top:12px;background:#fff;border:1px solid #c7e6d3;border-radius:10px;padding:11px 13px}
+  .yaku-sugg h4{font-size:12.5px;color:var(--green-d);margin-bottom:8px}
+  .yaku-pills{display:flex;flex-wrap:wrap;gap:7px}
+  .yaku-pill{background:var(--green-l);color:var(--green-d);border:1px solid #c7e6d3;border-radius:16px;padding:4px 11px;font-size:12.5px;font-weight:600}
+  .yaku-pill .han{color:var(--gold);font-weight:700;margin-left:3px}
+  .yaku-pill.ym{background:#fff6d8;border-color:#f0dca0}
+  .yaku-none{font-size:12.5px;color:var(--muted)}
+  .verdict{font-size:13px;color:var(--ink);margin-top:10px;line-height:1.75}
+  .verdict b.best{color:var(--green-d)}
   .hint{font-size:11.5px;color:var(--muted);margin-top:9px;line-height:1.7}
-  @media(max-width:600px){.panel{padding:16px}header h1{font-size:19px}}
+  @media(max-width:600px){.panel{padding:16px}header h1{font-size:19px}.board-cols{grid-template-columns:1fr}}
 </style>
 </head>
 <body data-page-node-id="ooQGUw9albKR30w1z6vFOu">
 <header data-page-node-id="8IHSMIXzqumCscvJs9QFUO">
   <h1 data-page-node-id="OoZLoi4TJZ7xPrdJgCjLwt"><!--pnid:1Wac7vL0Sdi0fNso1Kx7jP-->雀魂涨分助手</h1>
-  <p data-page-node-id="5I1qDTfcTqr6vUHLj6u8Zv"><!--pnid:xcpRQELuWgxoBTgsd5N7sH-->牌效率 · 役种速查 · 复盘清单 · 战绩统计 — 全部离线运行</p>
+  <p data-page-node-id="5I1qDTfcTqr6vUHLj6u8Zv"><!--pnid:xcpRQELuWgxoBTgsd5N7sH-->牌效率 · 役种速查 · 战绩统计 — 全部离线运行</p>
 </header>
 <div data-page-node-id="gVc6vBV4phV5fWpWsEBXhS" class="wrap">
-  <div data-page-node-id="4iUOf519JILRwPw9xCfkyI" class="notice"><!--pnid:O8Ffbexfm8t2ZSh9BL5ATA-->本工具仅在<b data-page-node-id="5ob4GMI3Q7xRc2Hhe34ec6"><!--pnid:iyUpMFxqmI9yvxQIUC0FPo-->对局之外</b><!--pnid:I8hfa6zFvBpkfewPFXin3n-->用于练习与复盘，不在对局中读取或提示任何信息，不涉及外挂/第三方脚本，不会触发封号。战绩与清单进度保存在本机浏览器。</div>
   <div data-page-node-id="Q42cirWIoDlYVOclaJF2kR" class="tabs">
     <div data-page-node-id="ZFoYag5OA9AwPu3ulpjtGw" class="tab on" data-p="p1"><!--pnid:AdEJJMZnz3DiNerEjAhtzz-->牌效率计算器</div>
     <div data-page-node-id="adVMYioO3OoOcUqmsUEOLl" class="tab" data-p="p2"><!--pnid:W2mfkSMfALN2i21GVqmgZq-->役种速查</div>
-    <div data-page-node-id="5WyO4feAvbJXAIzEsT1AVk" class="tab" data-p="p3"><!--pnid:oXmoMesy46W4giVGsCcrBT-->复盘清单</div>
     <div data-page-node-id="1DMquiewyXboyq8y32HC4R" class="tab" data-p="p4"><!--pnid:YxyrIz8aS3yNzaYy800SrA-->战绩统计</div>
   </div>
 
   <!--pnid:Zxqr5APPuhIWSlFC6HbQOu--><!-- 牌效率 -->
   <div data-page-node-id="lyyTr6T0CEuQEHUadmAtV7" class="panel on" id="p1">
     <h2 data-page-node-id="9YTPrsJvsROtrCe6V0uFR8"><!--pnid:81f6pHRAxELxmT8aCdFtEF-->牌效率计算器</h2>
-    <div data-page-node-id="fkcucezC4bmfDAUBLiJ4iQ" class="sub"><!--pnid:Cr6Vx5WPKlP9E3E70ClfsT-->输入 13 张手牌看进张；复盘时输入 14 张（13 张 + 当时摸到的牌）可看打牌建议。点下方牌加入，点已选手牌移除。</div>
+    <div data-page-node-id="fkcucezC4bmfDAUBLiJ4iQ" class="sub"><!--pnid:Cr6Vx5WPKlP9E3E70ClfsT-->13 张看进张；输到 14 张（＝当时手牌＋摸到的牌）自动出打牌建议。点牌加入，点已选手牌移除。</div>
     <div data-page-node-id="vw2div0eKLswiSkf3lQePm" id="picker"></div>
     <div data-page-node-id="cOQmWXGgrDF1upJ79zQg3f" class="input-row">
       <input data-page-node-id="B7UwFnC3VA0g5RRFkMNyR7" id="handInput" placeholder="快捷输入，如 123m456p789s东东 或 1112345678999m" type="text">
       <button data-page-node-id="LN7CV2Ix7wAncYRODegycb" class="btn" id="importBtn"><!--pnid:Prgo1nsrmhWju6SxY9QHz8-->导入</button>
       <button data-page-node-id="aD2SMv9PvcRRTEqLwy3PYL" class="btn ghost" id="clearBtn"><!--pnid:pQdAPf5stgaOQjwpNAhUYj-->清空</button>
     </div>
-    <div class="input-row" style="margin-top:-4px">
-      <button class="btn ghost sm" id="drawModeBtn">＋ 输入进张（摸到的牌）</button>
-      <span class="sub" style="margin:0">先输 13 张手牌，再点此输入当时抓到的第 14 张，即可分析该打哪张</span>
-    </div>
-    <div class="draw-row" id="drawRow" style="display:none">
-      <span class="draw-label">摸到的牌：</span>
-      <span id="drawPicked" style="flex:1;min-height:44px"></span>
-      <button class="btn sm" id="drawClearBtn">清除</button>
-      <button class="btn ghost sm" id="drawCancelBtn">收起</button>
-      <div class="sub" style="width:100%;margin:2px 0 0">在上方选牌区点一张牌作为进张；最多 14 张。</div>
-    </div>
     <div data-page-node-id="v44SgiQHEGRX0ReIBexurS" class="hand" id="hand"></div>
     <div data-page-node-id="aVzfxSPwQtYzIrphWeEMHk" class="result" id="result"></div>
+    <div id="discardBoard"></div>
   </div>
 
   <!--pnid:nSQOQZpMSnQnfim0BHb070--><!-- 役种速查 -->
@@ -153,14 +158,6 @@
     <div data-page-node-id="1iAM7oKfMCtKgjEVcYjQsp" class="sub"><!--pnid:8AyymL253l1LjLX6OCTmLG-->雀魂采用的标准役 + 常见古役。古役在雀魂中<b data-page-node-id="h7pFqZO7Pf4GGnEsZJiXGk"><!--pnid:QAbmIpTvLIMWDVmD9CQiXf-->不成立</b><!--pnid:VvG4OgI3lym2oaLKlyL0KJ-->（如你遇到的黑一色）。点击展开说明。</div>
     <div data-page-node-id="lS0GHNQM3VKcy2GGON0AFF" class="searchbar"><input data-page-node-id="E5rzqKaiHyGK1MAiqyoOgl" id="yakuSearch" placeholder="搜索役名，如 混一色 / 黑一色 / 役满" type="text"></div>
     <div data-page-node-id="MfoWuydo2Nr04gwZf12JMC" class="yaku-grid" id="yakuGrid"></div>
-  </div>
-
-  <!--pnid:h8Mb3YGIlKdDMqpfSnkGiG--><!-- 复盘清单 -->
-  <div data-page-node-id="nmQayO2RoDxWqBVMcH8Hoa" class="panel" id="p3">
-    <h2 data-page-node-id="l7NCMtzD7gv0Fupvfn2ElR"><!--pnid:kHxnDq9HeYwAsib90OGwQm-->复盘检查清单</h2>
-    <div data-page-node-id="jz9dCbj28KisP9VPxQ6ISL" class="sub"><!--pnid:XKgmsCaHbRqg8U4Tq5nVPq-->按段位分阶段，打完勾一勾，专治"无役烦"和低效切牌。进度自动保存在本机。</div>
-    <div data-page-node-id="Yk20UIk4yyErMMAtXy4D9z" id="checklist"></div>
-    <div data-page-node-id="cnev72pxS7yxJOqqNVtdb3" class="tools"><button data-page-node-id="vXp1KPFutvT1TdQcDQeh9q" class="btn ghost sm" id="resetChk"><!--pnid:GjL4vhtBLxGyej1XaeatWR-->重置全部勾选</button></div>
   </div>
 
   <!--pnid:FZi9AHzoVvcqbhX5AUPijQ--><!-- 战绩统计 -->
@@ -225,10 +222,8 @@ let hand=[]; // 当前手牌编码数组
     for(let i=a;i<b;i++){
       const s=document.createElement('span');s.className='tile '+tileClass(i);s.textContent=TNAMES[i];
       s.onclick=()=>{
-        if(hand.length>=14){alert('手牌已 14 张。若换进张，请先点「清除」移除旧的进张牌。');return;}
-        hand.push(i);
-        if(drawMode){drawnTile=i;renderDrawn();}
-        renderHand();
+        if(hand.length>=14){alert('已经 14 张了。要换牌请先点下方手牌移除一张。');return;}
+        hand.push(i);if(hand.length===14)selDiscard=null;renderHand();
       };
       d.appendChild(s);
     }
@@ -243,7 +238,7 @@ function renderHand(){
     box.innerHTML='';
     hand.slice().sort((a,b)=>a-b).forEach(v=>{
       const s=document.createElement('span');s.className='tile sel '+tileClass(v);s.textContent=TNAMES[v];
-      s.title='点击移除';s.onclick=()=>{const ix=hand.indexOf(v);hand.splice(ix,1);if(drawnTile===v){drawnTile=null;renderDrawn();}renderHand();};
+      s.title='点击移除';s.onclick=()=>{hand.splice(hand.indexOf(v),1);renderHand();};
       box.appendChild(s);
     });
   }
@@ -348,39 +343,149 @@ function reasonText(rows){
   return s;
 }
 
-function renderDiscardAnalysis(rows){
-  const best=rows[0];
-  let html='<div class="rec-summary">';
-  html+='<div style="font-size:15px;margin-bottom:5px">建议打出 <b class="best">'+TNAMES[best.tile]+'</b> <span style="font-size:12px;color:var(--muted)">· 优先级 1</span></div>';
-  html+='<div>打完：<b>'+shText(best.sh)+'</b> · 有效进张 <b>'+best.total+'</b> 枚 / '+best.kinds+' 种</div>';
-  if(best.waits.length) html+='<div class="waits"><b>进张：</b>'+best.waits.map(t=>tileHTML(t,'small win')).join('')+'</div>';
-  html+='</div>';
-  html+='<table><thead><tr><th>优先</th><th>打出</th><th>向听</th><th>进张枚数</th><th>种类</th></tr></thead><tbody>';
+// 静态手牌结构推断「可能的役种方向」+ 番数，仅供参考（未含副露/场风/立直等状态）
+function suggestYaku(c){
+  const res=[];
+  const n=i=>c[i]||0;
+  const total=c.reduce((a,b)=>a+b,0)||1;
+  let kinds=0, honors=0;
+  for(let i=0;i<34;i++){if(n(i)>0)kinds++;if(i>=27)honors+=n(i);}
+  const add=(name,han,ym)=>res.push({name,han,ym:!!ym});
+
+  // 七对子：对子数（4张计2对的上限处理）
+  let pairs=0;for(let i=0;i<34;i++)pairs+=Math.floor(n(i)/2);
+  if(pairs>=5) add('七对子','2番');
+  // 对对和倾向：刻子/对子多
+  let triples=0;for(let i=0;i<34;i++)if(n(i)>=3)triples++;
+  if(triples>=2) add('对对和','2番');
+
+  // 花色分布
+  const suitCnt=[0,0,0];for(let i=0;i<27;i++)suitCnt[Math.floor(i/9)]+=n(i);
+  const usedSuits=suitCnt.filter(x=>x>0).length;
+  if(usedSuits===1 && honors===0) add('清一色','6番');
+  else if(usedSuits===1 && honors>0) add('混一色','3番');
+
+  // 字牌三元刻/对
+  const dragons=[31,32,33];
+  const dragonComplete=dragons.filter(i=>n(i)>=3).length;
+  const dragonPair=dragons.filter(i=>n(i)>=2).length;
+  if(dragonComplete>=3) add('大三元','役满',true);
+  else if(dragonComplete>=2&&dragonPair>=3) add('小三元','2番');
+  else if(dragonComplete>=1) add('役牌·三元牌','1番');
+
+  // 幺九 / 老头
+  const ya=[0,8,9,17,18,26,27,28,29,30,31,32,33];
+  const allYao=ya.every(i=>n(i)>0);
+  if(allYao) add('国士无双','役满',true);
+  let allTerminalOrHonor=c.slice(0,34).every((v,i)=>v===0||i>=27||i%9===0||i%9===8);
+  let numCount=total-honors;
+  if(allTerminalOrHonor&&numCount>0&&honors>0) add('混老头','2番');
+  if(allTerminalOrHonor&&numCount>0&&honors===0) add('清老头','役满',true);
+
+  // 断幺九：无幺九、无字牌
+  let hasTerminal=false;
+  for(let i=0;i<27;i++){if(n(i)>0&&(i%9===0||i%9===8))hasTerminal=true;}
+  if(!hasTerminal&&honors===0) add('断幺九','1番');
+
+  // 顺子统计：返回总顺子数，以及同一(花色,起点)能否凑出≥2组（一杯口）
+  function runStats(arr){const a=arr.slice();let total=0,hasIipeiko=false;
+    for(let s=0;s<3;s++)for(let r=0;r<=6;r++){
+      let k=0;while(a[s*9+r]>0&&a[s*9+r+1]>0&&a[s*9+r+2]>0){a[s*9+r]--;a[s*9+r+1]--;a[s*9+r+2]--;k++;}
+      total+=k;if(k>=2)hasIipeiko=true;
+    }
+    return {total,hasIipeiko};
+  }
+  const rs=runStats(c);
+  if(rs.hasIipeiko) add('一杯口 / 二杯口','1番起');
+
+  // 一气通贯：同花色 123+456+789
+  for(let s=0;s<3;s++){
+    if(n(s*9)&&n(s*9+1)&&n(s*9+2)&&n(s*9+3)&&n(s*9+4)&&n(s*9+5)&&n(s*9+6)&&n(s*9+7)&&n(s*9+8)){add('一气通贯','2番');break;}
+  }
+  // 三色同顺
+  for(let r=0;r<=6;r++){
+    if(n(r)&&n(r+1)&&n(r+2)&&n(9+r)&&n(9+r+1)&&n(9+r+2)&&n(18+r)&&n(18+r+1)&&n(18+r+2)){add('三色同顺','2番');break;}
+  }
+  // 平和倾向：4 组顺子 + 雀头、无字牌、无刻子，且非七对路线
+  if(honors===0&&rs.total>=4&&triples===0&&pairs>=1&&pairs<5) add('平和','1番');
+
+  // 若已听牌相（14 张和牌形另算），给个基础提示
+  if(!res.length) add('暂无明显役向','—');
+  return res;
+}
+
+let selDiscard=null; // 当前选中的出张（牌编码）
+
+function renderDiscardBoard(rows){
+  const board=$('#discardBoard');
+  if(selDiscard===null || !rows.some(r=>r.tile===selDiscard)) selDiscard=rows[0].tile;
+  const cur=rows.find(r=>r.tile===selDiscard);
+  const rank=rows.findIndex(r=>r.tile===selDiscard)+1;
+
+  // 右侧出张按钮
+  let btns='<div class="discard-btns">';
   rows.forEach((r,i)=>{
-    const rc=i===0?'top':i===1?'second':'';
-    html+='<tr><td><span class="rank '+rc+'">'+(i+1)+'</span></td><td><b>'+TNAMES[r.tile]+'</b></td><td>'+shText(r.sh)+'</td><td>'+r.total+'</td><td>'+r.kinds+'</td></tr>';
+    btns+='<button class="discard-btn'+(r.tile===selDiscard?' on':'')+'" data-t="'+r.tile+'">'
+      +'<span class="rk">'+(i+1)+'</span>'+tileHTML(r.tile)+'</button>';
   });
-  html+='</tbody></table>';
-  html+='<div class="hint"><b>理由：</b>'+reasonText(rows)+'</div>';
-  html+='<div class="hint">排序规则：先看打完后的向听数（越少越好），再看进张枚数（越多越好）。进张枚数只按自己手牌扣除已见张估算，未计入别家手牌与牌河，复盘参考即可。</div>';
-  return html;
+  btns+='</div>';
+
+  // 左侧当前进张
+  let inTiles='';
+  if(cur.waits.length){
+    inTiles=cur.waits.map(t=>tileHTML(t,'small win')).join('');
+  }else{
+    inTiles='<span style="font-size:12.5px;color:var(--muted)">无进张（已成型或需换思路）</span>';
+  }
+
+  // 役种建议：按「打出 selDiscard 后的 13 张」推断
+  const after=countToArray(hand);after[selDiscard]--;
+  const yaku=suggestYaku(after);
+  let pills='';
+  yaku.forEach(y=>{
+    pills+='<span class="yaku-pill'+(y.ym?' ym':'')+'">'+y.name+'<span class="han">'+y.han+'</span></span>';
+  });
+
+  // 结论文字（针对当前选中的出张）
+  let verdict='';
+  if(rank===1) verdict='这是当前 <b class="best">优先级最高</b> 的打法：'+reasonText(rows);
+  else verdict='你选的是第 <b>'+rank+'</b> 顺位打法。最优是打 <b class="best">'+TNAMES[rows[0].tile]+'</b>。'+reasonText(rows);
+
+  board.innerHTML='<div class="board">'
+    +'<div class="board-head"><h3>打牌分析</h3><span class="tag">点右侧出张按钮，左侧进张与役种随之更新</span></div>'
+    +'<div class="board-cols">'
+      +'<div class="board-col"><h4>当前进张（打 '+TNAMES[selDiscard]+' 后）</h4><div class="in-tiles">'+inTiles+'</div>'
+        +'<div class="in-sum">'+shText(cur.sh)+' · 共 <b>'+cur.total+'</b> 枚进张 / '+cur.kinds+' 种</div></div>'
+      +'<div class="board-col"><h4>出张按钮（按优先级）</h4>'+btns+'</div>'
+    +'</div>'
+    +'<div class="verdict">'+verdict+'</div>'
+    +'<div class="yaku-sugg"><h4>建议役种方向（按打完的手牌结构推断，仅供参考）</h4><div class="yaku-pills">'+pills+'</div></div>'
+    +'<div class="hint">排序：先看打完后的向听数（少者优先），再看进张枚数（多者优先）。役种番数按雀魂常见规则标注，实际能否成立还受副露、场风、自风、立直等影响；进张枚数未计入他家手牌与牌河。</div>'
+    +'</div>';
+
+  board.querySelectorAll('.discard-btn').forEach(b=>b.onclick=()=>{selDiscard=+b.dataset.t;renderDiscardBoard(rows);});
 }
 
 function calc(){
-  const box=$('#result');
-  if(!hand.length){box.className='result';box.innerHTML='<div class="shanten small">—</div>';return;}
+  const box=$('#result');const board=$('#discardBoard');
+  if(!hand.length){board.innerHTML='';box.className='result';box.innerHTML='<div class="shanten small">—</div>';return;}
   const c=countToArray(hand);const sh=shantenOf(c);
   if(sh===-1){
+    board.innerHTML='';
     box.className='result win';
     box.innerHTML='<div class="shanten">和牌形 ✓ <small>14 张已成立</small></div>';
+    const ys=suggestYaku(c);
+    box.innerHTML+='<div class="yaku-sugg" style="margin-top:12px"><h4>成立的役种（仅供参考）</h4><div class="yaku-pills">'
+      +ys.map(y=>'<span class="yaku-pill'+(y.ym?' ym':'')+'">'+y.name+'<span class="han">'+y.han+'</span></span>').join('')+'</div></div>';
     return;
   }
   if(hand.length===14){
+    box.className='result';box.innerHTML='';
     const rows=analyzeDiscards(hand);
-    box.className='result';
-    box.innerHTML=renderDiscardAnalysis(rows);
+    renderDiscardBoard(rows);
     return;
   }
+  board.innerHTML='';
   box.className='result';
   let html='<div class="shanten">'+(sh===0?'听牌':sh+' 向听')+' <small>'+(sh===0?'可以和牌了':'再进 '+sh+' 步听牌')+'</small></div>';
   if(hand.length===13){
@@ -394,27 +499,8 @@ function calc(){
   box.innerHTML=html;
 }
 
-// ---- 输入进张（复盘摸到的那张）----
-let drawnTile=null, drawMode=false;
-function renderDrawn(){
-  const p=$('#drawPicked');
-  p.innerHTML=drawnTile===null
-    ? '<span style="font-size:12.5px;color:var(--muted)">尚未选牌，在上方选牌区点一张</span>'
-    : '<span class="tile win" style="border-bottom-color:var(--gold);background:#fff6d8">'+TNAMES[drawnTile]+'</span>';
-}
-$('#drawModeBtn').onclick=()=>{
-  drawMode=!drawMode;
-  $('#drawRow').style.display=drawMode?'flex':'none';
-  $('#drawModeBtn').textContent=drawMode?'✓ 进张输入中（点牌）':'＋ 输入进张（摸到的牌）';
-  if(drawMode)renderDrawn();
-};
-$('#drawClearBtn').onclick=()=>{
-  if(drawnTile!==null){const i=hand.indexOf(drawnTile);if(i>=0)hand.splice(i,1);}
-  drawnTile=null;renderDrawn();renderHand();
-};
-$('#drawCancelBtn').onclick=()=>{drawMode=false;$('#drawRow').style.display='none';$('#drawModeBtn').textContent='＋ 输入进张（摸到的牌）';};
-$('#importBtn').onclick=()=>{const p=parseHand($('#handInput').value);if(!p.length){alert('没识别到有效牌。格式示例：123m456p789s东东');return;}hand=p.slice(0,14);drawnTile=null;renderDrawn();renderHand();};
-$('#clearBtn').onclick=()=>{hand=[];drawnTile=null;renderDrawn();renderHand();};
+$('#importBtn').onclick=()=>{const p=parseHand($('#handInput').value);if(!p.length){alert('没识别到有效牌。格式示例：123m456p789s东东');return;}hand=p.slice(0,14);selDiscard=null;renderHand();};
+$('#clearBtn').onclick=()=>{hand=[];selDiscard=null;renderHand();};
 renderHand();
 
 /* ========== 役种速查 ========== */
@@ -504,54 +590,6 @@ function renderYaku(filter){
 }
 renderYaku();
 $('#yakuSearch').oninput=e=>renderYaku(e.target.value);
-
-/* ========== 复盘清单 ========== */
-const STAGES=[
-['雀杰 · 打基础',[
-  '和牌前先确认「有没有役」，再想做大牌',
-  '立直前数一下进张，不无脑立直',
-  '断幺九是最稳的保底役，别轻易放弃',
-  '每次放铳记下那张牌，想想是不是忽略了筋/壁',
-  '切牌前扫一眼全场牌河，别只盯自己手牌'
-]],
-['雀豪 · 提效率',[
-  '每切一张牌都问自己：这是不是最没用的那张',
-  '副露前想清楚：这手是速攻还是做役，别为听牌乱副露',
-  '对手立直后立刻切安全牌，不贪和牌',
-  '两家以上立直果断弃和，保住顺位',
-  '用回放对比自己的切牌和「最优解」，找差异'
-]],
-['雀圣 · 抠细节',[
-  '每周看一次和牌率/放铳率趋势，不盯单局输赢',
-  '研究 ALL LAST、亲家等不同场况的点数策略',
-  '练习读对手的宣言牌与舍牌节奏',
-  '建立自己的安全牌判断顺序（现物→筋→壁…）',
-  '连败时停一停，心态崩了决策必变形'
-]]
-];
-let chkState=JSON.parse(localStorage.getItem('lj_chk')||'{}');
-function renderChk(){
-  const box=$('#checklist');box.innerHTML='';
-  STAGES.forEach((stage,si)=>{
-    const key='s'+si;let done=0;
-    stage[1].forEach((_,ii)=>{if(chkState[key+'_'+ii])done++;});
-    const wrap=document.createElement('div');wrap.className='stage';
-    let html='<h3>'+stage[0]+'<span class="progress">'+done+' / '+stage[1].length+'</span></h3>';
-    html+='<div class="bar"><i style="width:'+(done/stage[1].length*100)+'%"></i></div>';
-    stage[1].forEach((text,ii)=>{
-      const k=key+'_'+ii;const on=!!chkState[k];
-      html+='<label class="chk'+(on?' done':'')+'"><input type="checkbox" data-k="'+k+'"'+(on?' checked':'')+'><span>'+text+'</span></label>';
-    });
-    wrap.innerHTML=html;box.appendChild(wrap);
-  });
-  box.querySelectorAll('input').forEach(inp=>inp.onchange=()=>{
-    chkState[inp.dataset.k]=inp.checked;
-    localStorage.setItem('lj_chk',JSON.stringify(chkState));
-    renderChk();
-  });
-}
-renderChk();
-$('#resetChk').onclick=()=>{if(confirm('清空所有勾选进度？')){chkState={};localStorage.setItem('lj_chk','{}');renderChk();}};
 
 /* ========== 战绩统计 ========== */
 let recs=JSON.parse(localStorage.getItem('lj_recs')||'[]');
