@@ -97,6 +97,14 @@
   .import-box textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px;font-family:inherit;font-size:12px;resize:vertical}
   .demo{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line)}
   .demo-label{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}
+  .draw-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0 12px;padding:10px;background:#fff8e8;border:1px solid #f0dca0;border-radius:9px}
+  .draw-label{font-size:12.5px;color:#96680f;font-weight:600}
+  .rank{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#eef2f0;color:var(--muted);font-size:12px;font-weight:700}
+  .rank.top{background:var(--green);color:#fff}
+  .rank.second{background:var(--green-l);color:var(--green-d)}
+  .rec-summary{background:#fff;border:1px solid #c7e6d3;border-radius:9px;padding:11px 13px;margin-bottom:12px;font-size:13.5px;line-height:1.9}
+  .rec-summary b.best{color:var(--green-d)}
+  .hint{font-size:11.5px;color:var(--muted);margin-top:9px;line-height:1.7}
   @media(max-width:600px){.panel{padding:16px}header h1{font-size:19px}}
 </style>
 </head>
@@ -117,12 +125,23 @@
   <!--pnid:Zxqr5APPuhIWSlFC6HbQOu--><!-- 牌效率 -->
   <div data-page-node-id="lyyTr6T0CEuQEHUadmAtV7" class="panel on" id="p1">
     <h2 data-page-node-id="9YTPrsJvsROtrCe6V0uFR8"><!--pnid:81f6pHRAxELxmT8aCdFtEF-->牌效率计算器</h2>
-    <div data-page-node-id="fkcucezC4bmfDAUBLiJ4iQ" class="sub"><!--pnid:Cr6Vx5WPKlP9E3E70ClfsT-->输入手牌，实时计算向听数与有效进张（含七对子、国士无双）。点下方牌加入手牌，点已选牌移除。</div>
+    <div data-page-node-id="fkcucezC4bmfDAUBLiJ4iQ" class="sub"><!--pnid:Cr6Vx5WPKlP9E3E70ClfsT-->输入 13 张手牌看进张；复盘时输入 14 张（13 张 + 当时摸到的牌）可看打牌建议。点下方牌加入，点已选手牌移除。</div>
     <div data-page-node-id="vw2div0eKLswiSkf3lQePm" id="picker"></div>
     <div data-page-node-id="cOQmWXGgrDF1upJ79zQg3f" class="input-row">
       <input data-page-node-id="B7UwFnC3VA0g5RRFkMNyR7" id="handInput" placeholder="快捷输入，如 123m456p789s东东 或 1112345678999m" type="text">
       <button data-page-node-id="LN7CV2Ix7wAncYRODegycb" class="btn" id="importBtn"><!--pnid:Prgo1nsrmhWju6SxY9QHz8-->导入</button>
       <button data-page-node-id="aD2SMv9PvcRRTEqLwy3PYL" class="btn ghost" id="clearBtn"><!--pnid:pQdAPf5stgaOQjwpNAhUYj-->清空</button>
+    </div>
+    <div class="input-row" style="margin-top:-4px">
+      <button class="btn ghost sm" id="drawModeBtn">＋ 输入进张（摸到的牌）</button>
+      <span class="sub" style="margin:0">先输 13 张手牌，再点此输入当时抓到的第 14 张，即可分析该打哪张</span>
+    </div>
+    <div class="draw-row" id="drawRow" style="display:none">
+      <span class="draw-label">摸到的牌：</span>
+      <span id="drawPicked" style="flex:1;min-height:44px"></span>
+      <button class="btn sm" id="drawClearBtn">清除</button>
+      <button class="btn ghost sm" id="drawCancelBtn">收起</button>
+      <div class="sub" style="width:100%;margin:2px 0 0">在上方选牌区点一张牌作为进张；最多 14 张。</div>
     </div>
     <div data-page-node-id="v44SgiQHEGRX0ReIBexurS" class="hand" id="hand"></div>
     <div data-page-node-id="aVzfxSPwQtYzIrphWeEMHk" class="result" id="result"></div>
@@ -205,7 +224,12 @@ let hand=[]; // 当前手牌编码数组
     d.innerHTML='<span class="group-label">'+g+'</span>';
     for(let i=a;i<b;i++){
       const s=document.createElement('span');s.className='tile '+tileClass(i);s.textContent=TNAMES[i];
-      s.onclick=()=>{if(hand.length>=14)return;hand.push(i);renderHand();};
+      s.onclick=()=>{
+        if(hand.length>=14){alert('手牌已 14 张。若换进张，请先点「清除」移除旧的进张牌。');return;}
+        hand.push(i);
+        if(drawMode){drawnTile=i;renderDrawn();}
+        renderHand();
+      };
       d.appendChild(s);
     }
     p.appendChild(d);
@@ -219,7 +243,7 @@ function renderHand(){
     box.innerHTML='';
     hand.slice().sort((a,b)=>a-b).forEach(v=>{
       const s=document.createElement('span');s.className='tile sel '+tileClass(v);s.textContent=TNAMES[v];
-      s.title='点击移除';s.onclick=()=>{hand.splice(hand.indexOf(v),1);renderHand();};
+      s.title='点击移除';s.onclick=()=>{const ix=hand.indexOf(v);hand.splice(ix,1);if(drawnTile===v){drawnTile=null;renderDrawn();}renderHand();};
       box.appendChild(s);
     });
   }
@@ -286,6 +310,62 @@ function shantenOf(c){return Math.min(standardShanten(c),chiitoiShanten(c),kokus
 function usefulTiles(c,cur){
   const res=[];for(let t=0;t<34;t++){if(c[t]>=4)continue;c[t]++;if(shantenOf(c)<cur)res.push(t);c[t]--;}return res;
 }
+function shText(sh){return sh<0?'和牌':sh===0?'听牌':sh+' 向听';}
+
+// 14 张复盘：逐张试打，按「向听少 → 进张多」排序
+function analyzeDiscards(h){
+  if(h.length!==14)return null;
+  const counts=countToArray(h);
+  const uniq=[...new Set(h)].sort((a,b)=>a-b);
+  const rows=uniq.map(t=>{
+    const c=counts.slice();c[t]--;            // 打出这一张后的 13 张
+    const sh=shantenOf(c);
+    const waits=usefulTiles(c,sh);
+    let total=0;waits.forEach(w=>{total+=4-counts[w];}); // 打出的牌已进牌河，故用原计数扣可见张
+    return {tile:t,sh,waits,total,kinds:waits.length};
+  });
+  rows.sort((a,b)=>a.sh-b.sh || b.total-a.total || b.kinds-a.kinds || a.tile-b.tile);
+  return rows;
+}
+
+function reasonText(rows){
+  const best=rows[0];
+  const worstSh=Math.max.apply(null,rows.map(r=>r.sh));
+  let s='';
+  if(best.sh===0)      s='打 '+TNAMES[best.tile]+' 后已听牌，离和牌只差一张';
+  else if(best.sh>0)   s='打 '+TNAMES[best.tile]+' 后保持 '+best.sh+' 向听';
+  if(worstSh>best.sh){
+    const worse=rows.filter(r=>r.sh>best.sh).map(r=>TNAMES[r.tile]).slice(0,4).join('、');
+    s+='；而打 '+worse+' 会退到 '+worstSh+' 向听，所以排除。';
+  }else if(rows[1]){
+    const diff=best.total-rows[1].total;
+    if(diff>0) s+='；同样 '+best.sh+' 向听的打法里，它进张最多（'+best.total+' 枚），比次选多 '+diff+' 枚。';
+    else       s+='；各打法向听和进张接近，可按自己的做牌方向选。';
+  }
+  if(best.waits.length){
+    s+=' 进张是 '+best.waits.slice(0,6).map(t=>TNAMES[t]).join('、')+(best.waits.length>6?'等':'')+'，摸到即可推进。';
+  }
+  return s;
+}
+
+function renderDiscardAnalysis(rows){
+  const best=rows[0];
+  let html='<div class="rec-summary">';
+  html+='<div style="font-size:15px;margin-bottom:5px">建议打出 <b class="best">'+TNAMES[best.tile]+'</b> <span style="font-size:12px;color:var(--muted)">· 优先级 1</span></div>';
+  html+='<div>打完：<b>'+shText(best.sh)+'</b> · 有效进张 <b>'+best.total+'</b> 枚 / '+best.kinds+' 种</div>';
+  if(best.waits.length) html+='<div class="waits"><b>进张：</b>'+best.waits.map(t=>tileHTML(t,'small win')).join('')+'</div>';
+  html+='</div>';
+  html+='<table><thead><tr><th>优先</th><th>打出</th><th>向听</th><th>进张枚数</th><th>种类</th></tr></thead><tbody>';
+  rows.forEach((r,i)=>{
+    const rc=i===0?'top':i===1?'second':'';
+    html+='<tr><td><span class="rank '+rc+'">'+(i+1)+'</span></td><td><b>'+TNAMES[r.tile]+'</b></td><td>'+shText(r.sh)+'</td><td>'+r.total+'</td><td>'+r.kinds+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  html+='<div class="hint"><b>理由：</b>'+reasonText(rows)+'</div>';
+  html+='<div class="hint">排序规则：先看打完后的向听数（越少越好），再看进张枚数（越多越好）。进张枚数只按自己手牌扣除已见张估算，未计入别家手牌与牌河，复盘参考即可。</div>';
+  return html;
+}
+
 function calc(){
   const box=$('#result');
   if(!hand.length){box.className='result';box.innerHTML='<div class="shanten small">—</div>';return;}
@@ -293,6 +373,12 @@ function calc(){
   if(sh===-1){
     box.className='result win';
     box.innerHTML='<div class="shanten">和牌形 ✓ <small>14 张已成立</small></div>';
+    return;
+  }
+  if(hand.length===14){
+    const rows=analyzeDiscards(hand);
+    box.className='result';
+    box.innerHTML=renderDiscardAnalysis(rows);
     return;
   }
   box.className='result';
@@ -304,13 +390,31 @@ function calc(){
     html+='<div class="statline">共 <b>'+total+'</b> 枚进张 · '+waits.length+' 种牌</div>';
   }else if(hand.length<13){
     html+='<div class="statline">再补 '+(13-hand.length)+' 张到 13 张即可算进张</div>';
-  }else{
-    html+='<div class="statline">当前 '+hand.length+' 张。算进张请减到 13 张。</div>';
   }
   box.innerHTML=html;
 }
-$('#importBtn').onclick=()=>{const p=parseHand($('#handInput').value);if(!p.length){alert('没识别到有效牌。格式示例：123m456p789s东东');return;}hand=p.slice(0,14);renderHand();};
-$('#clearBtn').onclick=()=>{hand=[];renderHand();};
+
+// ---- 输入进张（复盘摸到的那张）----
+let drawnTile=null, drawMode=false;
+function renderDrawn(){
+  const p=$('#drawPicked');
+  p.innerHTML=drawnTile===null
+    ? '<span style="font-size:12.5px;color:var(--muted)">尚未选牌，在上方选牌区点一张</span>'
+    : '<span class="tile win" style="border-bottom-color:var(--gold);background:#fff6d8">'+TNAMES[drawnTile]+'</span>';
+}
+$('#drawModeBtn').onclick=()=>{
+  drawMode=!drawMode;
+  $('#drawRow').style.display=drawMode?'flex':'none';
+  $('#drawModeBtn').textContent=drawMode?'✓ 进张输入中（点牌）':'＋ 输入进张（摸到的牌）';
+  if(drawMode)renderDrawn();
+};
+$('#drawClearBtn').onclick=()=>{
+  if(drawnTile!==null){const i=hand.indexOf(drawnTile);if(i>=0)hand.splice(i,1);}
+  drawnTile=null;renderDrawn();renderHand();
+};
+$('#drawCancelBtn').onclick=()=>{drawMode=false;$('#drawRow').style.display='none';$('#drawModeBtn').textContent='＋ 输入进张（摸到的牌）';};
+$('#importBtn').onclick=()=>{const p=parseHand($('#handInput').value);if(!p.length){alert('没识别到有效牌。格式示例：123m456p789s东东');return;}hand=p.slice(0,14);drawnTile=null;renderDrawn();renderHand();};
+$('#clearBtn').onclick=()=>{hand=[];drawnTile=null;renderDrawn();renderHand();};
 renderHand();
 
 /* ========== 役种速查 ========== */
