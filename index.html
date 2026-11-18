@@ -13,6 +13,8 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;padding-bottom:40px}
+  #toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(12px);background:rgba(38,50,56,.94);color:#fff;padding:10px 20px;border-radius:22px;font-size:13px;box-shadow:0 4px 18px rgba(0,0,0,.2);z-index:999;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;max-width:88vw;text-align:center}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .wrap{max-width:980px;margin:0 auto;padding:0 16px}
   .tabs{display:flex;gap:6px;margin:22px 0 16px;flex-wrap:wrap;justify-content:center}
   .tab{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:9px 18px;cursor:pointer;font-size:14px;color:var(--muted);transition:.15s}
@@ -293,6 +295,14 @@
 <script data-page-node-id="Qk89Vmd98LJDn9csOOljM8" data-pnid-children="YlqZaw4XypBD7rSdenVdLe">
 /* ========== 通用 ========== */
 const $ = s => document.querySelector(s);
+// 轻提示：自动消失、点任意处关闭，无需点「确定」（替代阻塞式 alert）
+let toastTimer=null;
+function toast(msg){
+  const el=$('#toast');if(!el)return;
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+}
+document.addEventListener('click',()=>{const el=$('#toast');if(el)el.classList.remove('show');},true);
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
@@ -490,10 +500,10 @@ function tileFaceSVG(i){
 let windRound=0, windSeat=0;        // 0东 1南 2西 3北（场风编码 = 27+v）
 let doraIndicators=[];              // 宝牌指示牌编码数组，最多 5 张
 const MAX_DORA=5;
-// 宝牌 = 指示牌的下一张：数牌按花色 1→9 循环；字牌按显示顺序 東南西北中白發 分组循环
-// 风牌 東→南→西→北→東；三元 中→白→發→中（编码 31中/32发/33白，不能直接用 t+1）
-const HONOR_CYCLE=[27,28,29,30,31,33,32]; // 仅用于显示/排序：東南西北中白發
-const DRAGON_CYCLE=[31,33,32];             // 中→白→發→中
+// 宝牌 = 指示牌的下一张：数牌按花色 1→9 循环；字牌分组循环（风 東→南→西→北→東；三元 中→白→發→中）
+// 注意：显示顺序统一为 東南西北白發中，与宝牌推算顺序是两回事
+const HONOR_CYCLE=[27,28,29,30,33,32,31]; // 显示/排序：東南西北白發中
+const DRAGON_CYCLE=[31,33,32];             // 宝牌推算：中→白→發→中（编码 31中/32发/33白，不能直接用 t+1）
 function doraSortKey(t){return t<27?t:27+HONOR_CYCLE.indexOf(t);}
 function nextTile(t){
   if(t<27){const suit=Math.floor(t/9),r=t%9;return suit*9+(r===8?0:r+1);}
@@ -527,7 +537,7 @@ function buildPicker(){
     d.innerHTML='<span class="group-label">'+g+'</span>';
     let seq=[];for(let i=a;i<b;i++)seq.push(i);
     if(g==='万'&&gameMode===3)seq=[0,8,1,2,3,4,5,6,7]; // 1、9万在前，2-8万在后
-    if(g==='字')seq=[27,28,29,30,31,33,32]; // 東南西北中白發（白在发左边，仅显示顺序，编码不变）
+    if(g==='字')seq=HONOR_CYCLE.slice(); // 東南西北白發中（显示顺序，编码与宝牌推算不变）
     seq.forEach(i=>{
       const ok=tileAllowed(i);
       const s=document.createElement('span');
@@ -536,7 +546,7 @@ function buildPicker(){
       s.innerHTML=tileFaceSVG(i);
       if(ok)s.onclick=()=>{
         const cap=14-3*melds.length;
-        if(hand.length>=cap){alert('已经 '+cap+' 张了（含副露基准）。要换牌请先点下方手牌移除一张。');return;}
+        if(hand.length>=cap){toast('已经 '+cap+' 张了（含副露基准）。要换牌请先点下方手牌移除一张。');return;}
         hand.push(i);if(hand.length===cap)selDiscard=null;renderHand();
       };
       d.appendChild(s);
@@ -556,8 +566,8 @@ buildPicker();
 // 构建宝牌指示牌选择器（可多选，最多 MAX_DORA 张）
 function buildDoraPicker(){
   const box=$('#doraPicker');box.innerHTML='';
-  // 字牌显示顺序与主选牌器一致：東南西北中白發（仅显示顺序，编码与宝牌推算不变）
-  const seq=[];for(let t=0;t<27;t++)seq.push(t);seq.push(27,28,29,30,31,33,32);
+  // 字牌显示顺序与主选牌器一致：東南西北白發中（仅显示顺序，编码与宝牌推算不变）
+  const seq=[];for(let t=0;t<27;t++)seq.push(t);HONOR_CYCLE.forEach(t=>seq.push(t));
   seq.forEach(t=>{
     if(!tileAllowed(t))return;
     const s=document.createElement('span');
@@ -623,17 +633,21 @@ document.querySelectorAll('.wind-btn').forEach(btn=>btn.onclick=()=>{
   document.querySelectorAll('.wind-btn[data-wind="'+kind+'"]').forEach(x=>x.classList.toggle('on',x===btn));
   if(hand.length)calc(); // 重新渲染役种建议
 });
-// 三人麻没有北风座位：隐藏「北」自风按钮；已在北时必须改回东
-function syncSeatWindButtons(){
+// 模式相关 UI：三人麻没有北风座位、也不能吃
+function syncModeUI(){
   const northBtn=document.querySelector('.wind-btn[data-wind="seat"][data-v="3"]');
-  if(!northBtn)return;
-  if(gameMode===3){
-    northBtn.style.display='none';
-    if(windSeat===3)windSeat=0;
-  }else northBtn.style.display='';
-  document.querySelectorAll('.wind-btn[data-wind="seat"]').forEach(x=>x.classList.toggle('on',+x.dataset.v===windSeat));
+  if(northBtn){
+    if(gameMode===3){
+      northBtn.style.display='none';
+      if(windSeat===3)windSeat=0;
+    }else northBtn.style.display='';
+    document.querySelectorAll('.wind-btn[data-wind="seat"]').forEach(x=>x.classList.toggle('on',+x.dataset.v===windSeat));
+  }
+  const chiBtn=document.querySelector('.meld-btn[data-m="chi"]');
+  if(chiBtn)chiBtn.style.display=gameMode===3?'none':'';
+  if(typeof updateMeldTip==='function')updateMeldTip();
 }
-syncSeatWindButtons();
+syncModeUI();
 function windYakuPai(){
   // 返回算作役牌的风牌编码（场风+自风，去重）
   return [...new Set([27+windRound,27+windSeat])];
@@ -645,7 +659,7 @@ document.querySelectorAll('.mode-btn').forEach(btn=>btn.onclick=()=>{
   if(m===gameMode)return;
   gameMode=m;
   document.querySelectorAll('.mode-btn').forEach(x=>x.classList.toggle('on',x===btn));
-  syncSeatWindButtons();
+  syncModeUI();
   $('#modeNote').textContent=m===3
     ?'三麻：无2-8万·不可吃·无三色同顺·自风无北，北可拔北当宝牌'
     :'四麻：1-9万齐全，可吃，有三色同顺';
@@ -687,7 +701,7 @@ function renderHand(){
   else{
     box.innerHTML='';
     // 保留原始索引以区分同种牌的多张实例（副露选牌用）
-    hand.map((v,idx)=>({v,idx})).sort((a,b)=>a.v-b.v).forEach(({v,idx})=>{
+    hand.map((v,idx)=>({v,idx})).sort((a,b)=>doraSortKey(a.v)-doraSortKey(b.v)).forEach(({v,idx})=>{
       const picked=meldPicked.some(p=>p.idx===idx);
       const s=document.createElement('span');s.className='tile sel '+tileClass(v)+(isDora(v)?' dora':'')+(picked?' meld-pick':'');s.innerHTML=tileFaceSVG(v);
       if(meldMode){
@@ -720,7 +734,9 @@ function renderHand(){
 function meldBaseline(){return 13-3*melds.length;} // 听牌前应有的暗牌张数
 function updateMeldTip(){
   const tip=$('#meldTip');
-  if(!meldMode){tip.textContent='点「碰/吃/杠」→ 点手牌里的牌，选够张数后自动成为副露，不再参与取舍。碰选2张相同、明杠3张相同、暗杠4张相同；吃选同花色相邻2张（自动补成顺子，四麻）。暗杠不破门清，点副露组可撤销。';return;}
+  if(!meldMode){tip.textContent=gameMode===3
+    ?'点「碰/杠」→ 点手牌里的牌，选够张数后自动成为副露，不再参与取舍。碰选2张相同、明杠3张相同、暗杠4张相同。三人麻不能吃；暗杠不破门清，点副露组可撤销。'
+    :'点「碰/吃/杠」→ 点手牌里的牌，选够张数后自动成为副露，不再参与取舍。碰选2张相同、明杠3张相同、暗杠4张相同；吃选同花色相邻2张（自动补成顺子，四麻）。暗杠不破门清，点副露组可撤销。';return;}
   const need={pon:2,chi:2,mkan:3,akan:4}[meldMode];
   const names={pon:'碰',chi:'吃',mkan:'明杠',akan:'暗杠'};
   tip.innerHTML='<b style="color:var(--green-d)">'+names[meldMode]+'操作</b>：已选 '+meldPicked.length+'/'+need+' 张（手牌高亮为金色），选够后自动成立；再点一次模式按钮可取消。';
@@ -1503,5 +1519,6 @@ $('#exportRec').onclick=()=>{
 };
 renderStats();
 </script>
+<div id="toast"></div>
 </body>
 </html>
