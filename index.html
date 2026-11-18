@@ -245,7 +245,7 @@
         <button class="meld-btn ghost" id="meldUndo">撤销</button>
         <button class="meld-btn ghost" id="meldClear">清空</button>
       </div>
-      <div class="meld-tip" id="meldTip">点「碰/吃/杠」→ 点手牌里的牌，选够张数后自动成为副露，不再参与取舍。碰选2张相同、明杠3张相同、暗杠4张相同；吃选同花色相邻2张（自动补成顺子，四麻）。暗杠不破门清，点副露组可撤销。</div>
+      <div class="meld-tip" id="meldTip">点「碰/吃/杠」→ 点手牌里的牌，选够张数后自动成为副露，不再参与取舍。碰选2张相同、明杠3张相同、暗杠4张相同；吃选同花色2张，相邻或隔一张都可（自动补成顺子，四麻，如24吃3、13吃2、89吃7）。暗杠不破门清，点副露组可撤销。</div>
       <div class="melds" id="melds"></div>
     </div>
     <div data-page-node-id="v44SgiQHEGRX0ReIBexurS" class="hand" id="hand"></div>
@@ -739,7 +739,7 @@ function updateMeldTip(){
   const tip=$('#meldTip');
   if(!meldMode){tip.textContent=gameMode===3
     ?'点「碰/杠」→ 点手牌里的牌，选够张数后自动成为副露，不再参与取舍。碰选2张相同、明杠3张相同、暗杠4张相同。三人麻不能吃；暗杠不破门清，点副露组可撤销。'
-    :'点「碰/吃/杠」→ 点手牌里的牌，选够张数后自动成为副露，不再参与取舍。碰选2张相同、明杠3张相同、暗杠4张相同；吃选同花色相邻2张（自动补成顺子，四麻）。暗杠不破门清，点副露组可撤销。';return;}
+    :'点「碰/吃/杠」→ 点手牌里的牌，选够张数后自动成为副露，不再参与取舍。碰选2张相同、明杠3张相同、暗杠4张相同；吃选同花色2张，相邻或隔一张都可（自动补成顺子，四麻，如24吃3、13吃2、89吃7）。暗杠不破门清，点副露组可撤销。';return;}
   const need={pon:2,chi:2,mkan:3,akan:4}[meldMode];
   const names={pon:'碰',chi:'吃',mkan:'明杠',akan:'暗杠'};
   tip.innerHTML='<b style="color:var(--green-d)">'+names[meldMode]+'操作</b>：已选 '+meldPicked.length+'/'+need+' 张（手牌高亮为金色），选够后自动成立；再点一次模式按钮可取消。';
@@ -769,14 +769,21 @@ function doMeld(type){
     if(!P.every(x=>x===t)){alert(namesForMeld(type)+'需要相同的牌。');return;}
     origin=P.slice();
     tiles=type==='pon'?[t,t,t]:[t,t,t,t];
-  }else{ // chi：两张相邻数牌，补一张成顺子
+  }else{ // chi：同花色两张数牌，相邻或隔一张（嵌张），补一张成顺子
     let [a,b]=P.slice().sort((x,y)=>x-y);
-    if(a>=27||b>=27||Math.floor(a/9)!==Math.floor(b/9)||b-a!==1){alert('吃需要选同花色相邻的两张数牌（如三万+四万）。');return;}
+    const sameSuit=(a<27&&b<27&&Math.floor(a/9)===Math.floor(b/9));
+    const gap=b-a;
+    if(!sameSuit||(gap!==1&&gap!==2)){alert('吃需要选同花色的两张数牌：相邻（如三万+四万）或隔一张（如二万+四万，吃三万）。');return;}
     origin=[a,b];
-    // 补一张：优先补左端（a-1），越界则补右端（b+1）
-    const r=a%9;
-    const left=(r>0)?a-1:null, right=(b%9<8)?b+1:null;
-    const add=(left!==null)?left:right;
+    let add;
+    if(gap===2){
+      add=a+1; // 嵌张：补中间那张（2+4吃3、1+3吃2、8+9吃7是相邻走下面）
+    }else{
+      // 相邻：优先补左端（a-1），越界则补右端（b+1）
+      const r=a%9;
+      const left=(r>0)?a-1:null, right=(b%9<8)?b+1:null;
+      add=(left!==null)?left:right;
+    }
     tiles=[add,a,b].sort((x,y)=>x-y);
   }
   // 从手牌移除来源牌：按选中的原始 idx 倒序删除，避免索引错位
