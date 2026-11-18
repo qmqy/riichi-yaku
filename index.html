@@ -124,6 +124,15 @@
   .shape-box b{color:var(--green-d)}
   .shape-box .warn{color:var(--red);font-weight:600}
   .shape-box .ok{color:var(--green-d);font-weight:600}
+  .tactics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .tac-col{border-radius:9px;padding:10px 12px;font-size:12.5px;line-height:1.75}
+  .tac-atk{background:var(--red-l);border:1px solid #f0c4bf}
+  .tac-def{background:var(--blue-l);border:1px solid #bfd6ea}
+  .tac-h{font-weight:700;margin-bottom:5px;color:var(--red)}
+  .tac-def .tac-h{color:var(--blue)}
+  .tac-col ul{margin:0;padding-left:17px}
+  .tac-col li{margin:3px 0}
+  .tac-col b{color:var(--ink)}
   .mode-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;padding:10px 12px;background:#fafcfb;border:1px solid var(--line);border-radius:9px}
   .mode-label{font-size:12.5px;color:var(--muted);font-weight:600}
   .mode-btn{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:16px;padding:5px 14px;font-size:12.5px}
@@ -162,7 +171,7 @@
   .verdict{font-size:13px;color:var(--ink);margin-top:10px;line-height:1.75}
   .verdict b.best{color:var(--green-d)}
   .hint{font-size:11.5px;color:var(--muted);margin-top:9px;line-height:1.7}
-  @media(max-width:600px){.panel{padding:16px}.board-cols{grid-template-columns:1fr}}
+  @media(max-width:600px){.panel{padding:16px}.board-cols{grid-template-columns:1fr}.tactics{grid-template-columns:1fr}}
 </style>
 </head>
 <body data-page-node-id="ooQGUw9albKR30w1z6vFOu">
@@ -483,6 +492,7 @@ function buildPicker(){
     d.innerHTML='<span class="group-label">'+g+'</span>';
     let seq=[];for(let i=a;i<b;i++)seq.push(i);
     if(g==='万'&&gameMode===3)seq=[0,8,1,2,3,4,5,6,7]; // 1、9万在前，2-8万在后
+    if(g==='字')seq=[27,28,29,30,31,33,32]; // 東南西北中白發（白在发左边，仅显示顺序，编码不变）
     seq.forEach(i=>{
       const ok=tileAllowed(i);
       const s=document.createElement('span');
@@ -510,8 +520,10 @@ buildPicker();
 // 构建宝牌指示牌选择器（可多选，最多 MAX_DORA 张）
 function buildDoraPicker(){
   const box=$('#doraPicker');box.innerHTML='';
-  for(let t=0;t<34;t++){
-    if(!tileAllowed(t))continue;
+  // 字牌显示顺序与主选牌器一致：東南西北中白發（仅显示顺序，编码与宝牌推算不变）
+  const seq=[];for(let t=0;t<27;t++)seq.push(t);seq.push(27,28,29,30,31,33,32);
+  seq.forEach(t=>{
+    if(!tileAllowed(t))return;
     const s=document.createElement('span');
     s.className='tile dora-pick small '+(doraIndicators.indexOf(t)>=0?'on':'');
     s.innerHTML=tileFaceSVG(t);
@@ -525,7 +537,7 @@ function buildDoraPicker(){
       buildDoraSlots();buildDoraPicker();refreshDoraInfo();buildPicker();renderHand();
     };
     box.appendChild(s);
-  }
+  });
 }
 // 渲染固定 5 个指示牌位：已选显示牌面（点击取消），未选显示牌背
 function buildDoraSlots(){
@@ -719,7 +731,10 @@ function tileShape(t,c){
     if(lo===0||hi===8)return {name:'边张搭子',eff:'4张',adv:'仅听一种不易改良，优先舍弃',keep:0};
     return {name:'两面搭子',eff:'8张',adv:'保留搭子，可向高价值听牌发展',keep:1};
   }
-  if(r===0||r===8)return {name:'孤立幺九',eff:'0~2张',adv:'仅能成边张或雀头，最高优先早巡必舍',keep:0};
+  if(r===0||r===8){
+    if(gameMode===3&&suit===0)return {name:'孤张万(三麻)',eff:'仅雀头',adv:'三麻只剩1、9万，成不了顺子，仅能作雀头，最优先早舍（先1万后9万）',keep:0,bonus:-0.5};
+    return {name:'孤立幺九',eff:'0~2张',adv:'仅能成边张或雀头，最高优先早巡必舍',keep:0};
+  }
   if(r===1||r===7)return {name:'孤立2/8',eff:'2~4张',adv:'可成边张或嵌张，中优先早巡舍',keep:0};
   return {name:'中张单张',eff:'8~12张',adv:'周围有搭子则留，否则可打',keep:2};
 }
@@ -766,6 +781,35 @@ function reasonText(rows){
     s+=' <b style="color:var(--gold)">注意：打 '+doraDiscards.map(r=>TNAMES[r.tile]).join('、')+' 会拆掉宝牌对子，虽然牌效率排前，但会损失宝牌价值，做混一色/对对和时可考虑改留。</b>';
   }
   return s;
+}
+
+// 三麻战术建议：进攻为主、防守兼备。部分结合当前出张/役向动态生成，其余为通用原则（工具读不到巡目/对手/牌河）
+function sanmaTactics(cur,yaku){
+  const atk=[],def=[];
+  const flush=yaku.some(y=>y.name==='清一色'||y.name==='混一色');
+  const big=yaku.some(y=>y.han==='役满'||/满贯|跳满|倍满/.test(y.name+y.han));
+  // —— 进攻线（结合牌效状态）——
+  if(cur.sh===0){
+    if(big) atk.push('<b>已听牌且牌力很高：</b>早巡仍立直压制；若已过 6 巡且确定满贯，可默听偷胡，胡率更高。');
+    else if(cur.total>=5) atk.push('<b>好型已听（'+cur.total+' 枚进张）：果断立直。</b>三麻牌山消耗极快，一两番的好型也直接立，别为等完美听口错过时机。');
+    else atk.push('<b>已听但进张偏窄（'+cur.total+' 枚）：</b>可立直搏早和；若门前清无役记得立直，别默听无役和不了。');
+  }else if(cur.sh===1){
+    atk.push('<b>一向听，保持最高牌效推进。</b>前 5 巡只追进张最多的打法，好型一到听牌立刻立直。');
+  }else{
+    atk.push('<b>当前 '+cur.sh+' 向听：牌效至上。</b>先做进张最广的形状，不要为凑一个不确定的役种而拖延。');
+  }
+  if(flush) atk.push('<b>染手方向明确：</b>三麻清一色/混一色成功率远高于四麻，可积极做；但一旦要拆成型面子或损失大量进张，果断放弃改立直。');
+  atk.push('<b>舍牌顺序：</b>单个 1 万最先出 → 单个 9 万其次 → 自风最后。三麻万子只剩 1、9，孤张越早舍越好。');
+  atk.push('<b>追立看三点：</b>加上立直能否到满贯、听牌型是否优于对方、点炮是否承受得起；庄家立直多半满贯以上，小牌别硬追。');
+  // —— 防守线（进攻型也要会止损）——
+  def.push('<b>弃和果断：</b>对手立直或副露明显做大、自家又没满贯潜力时，直接打现物/壁牌，宁可流局也别点炮。');
+  def.push('<b>壁牌与筋：</b>某牌场上已现 4 张成壁，其邻张点好形的概率大降；早巡打过 2 筒则 1 筒是筋牌较安全。对手连续摸切中张要警惕听牌。');
+  def.push('<b>宝牌危险：</b>宝牌及其周边放铳率高，对手立直时慎切。');
+  def.push('<b>进攻型的底线：</b>手牌好就果断攻，手牌差就果断弃——不在不该攻的时候硬攻，才是聪明的进攻。');
+  return '<div class="tactics">'
+    +'<div class="tac-col tac-atk"><div class="tac-h">进攻 · 三麻打法</div><ul>'+atk.map(x=>'<li>'+x+'</li>').join('')+'</ul></div>'
+    +'<div class="tac-col tac-def"><div class="tac-h">防守底线 · 兼备</div><ul>'+def.map(x=>'<li>'+x+'</li>').join('')+'</ul></div>'
+    +'</div>';
 }
 
 // 静态手牌结构推断「可能的役种方向」+ 番数，仅供参考（未含副露/场风/立直等状态）
@@ -921,7 +965,8 @@ function renderDiscardBoard(rows){
     +'</div>'
     +'<div class="verdict">'+verdict+'</div>'
     +shapeBox
-    +'<div class="hint">排序：先看打完后的向听数（少者优先），再看进张枚数（多者优先），同分时按形状优先级（早巡该舍的孤立牌在前）。'+(gameMode===3?'<b>三麻模式</b>：已排除2-8万，不提示三色同顺，北可作宝牌。':'')+' 已按上方<b>场风/自风</b>判断风牌役牌、按<b>宝牌指示牌</b>高亮宝牌并加权保留；宝牌对子虽可能被牌效率排在前面，拆与不拆请结合做牌方向权衡。役种番数按雀魂常见规则标注，实际能否成立还受副露、立直等影响；进张枚数未计入他家手牌与牌河。</div>'
+    +(gameMode===3?sanmaTactics(cur,yaku):'')
+    +'<div class="hint">排序：先看打完后的向听数（少者优先），再看进张枚数（多者优先），同分时按形状优先级（早巡该舍的孤立牌在前）。'+(gameMode===3?'<b>三麻模式</b>：已排除 2-8 万、不提示三色同顺、北可作宝牌；上方「进攻/防守底线」为三麻打法提示，其中追立、弃和等需结合巡目与对手牌河自行判断。':'')+' 已按上方<b>场风/自风</b>判断风牌役牌、按<b>宝牌指示牌</b>高亮宝牌并加权保留；宝牌对子虽可能被牌效率排在前面，拆与不拆请结合做牌方向权衡。役种番数按雀魂常见规则标注，实际能否成立还受副露、立直等影响；进张枚数未计入他家手牌与牌河。</div>'
     +'</div>';
 
   board.querySelectorAll('.discard-btn').forEach(b=>b.onclick=()=>{selDiscard=+b.dataset.t;renderDiscardBoard(rows);});
