@@ -45,6 +45,22 @@
   .btn.danger{background:var(--red)}
   .hand{min-height:50px;padding:10px;background:#fafcfb;border:1px dashed var(--line);border-radius:10px;margin:8px 0}
   .hand .empty{color:var(--muted);font-size:13px;padding:8px}
+  .meld-section{margin:8px 0}
+  .meld-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .meld-btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:14px;padding:4px 13px;font-size:12.5px}
+  .meld-btn:hover{border-color:var(--green);color:var(--green)}
+  .meld-btn.on{background:var(--green);color:#fff;border-color:var(--green)}
+  .meld-btn.ghost{color:var(--muted);font-size:12px}
+  .meld-tip{font-size:11.5px;color:var(--muted);margin:5px 0;line-height:1.6}
+  .melds{display:flex;flex-wrap:wrap;gap:10px;min-height:0}
+  .meld-group{display:inline-flex;align-items:center;gap:3px;padding:4px 7px;background:#f3f8f5;border:1px solid #c7e6d3;border-radius:8px}
+  .meld-group.akan{background:#fff9ec;border-color:#e7d29a}
+  .meld-group .tile{margin:0;width:25px;height:38px;cursor:default}
+  .meld-group .tile svg,.meld-group .tile>svg{width:100%;height:100%}
+  .meld-tag{font-size:11px;color:var(--green-d);font-weight:700;margin-right:2px}
+  .meld-group.akan .meld-tag{color:#a8811c}
+  .hand .tile.meld-pick{outline:2px solid var(--gold);outline-offset:1px;transform:translateY(-3px)}
+  .meld-note{font-size:12px;color:var(--green-d);background:#f3f8f5;border:1px solid #c7e6d3;border-radius:7px;padding:5px 10px;margin-bottom:9px}
   .result{margin-top:14px;padding:16px;border-radius:10px;background:var(--green-l);border:1px solid #c7e6d3}
   .result .shanten{font-size:26px;font-weight:800;color:var(--green-d)}
   .result .shanten small{font-size:13px;font-weight:500;color:var(--muted)}
@@ -185,7 +201,7 @@
   <!--pnid:Zxqr5APPuhIWSlFC6HbQOu--><!-- 牌效率 -->
   <div data-page-node-id="lyyTr6T0CEuQEHUadmAtV7" class="panel on" id="p1">
     <h2 data-page-node-id="9YTPrsJvsROtrCe6V0uFR8"><!--pnid:81f6pHRAxELxmT8aCdFtEF-->牌效率计算器</h2>
-    <div data-page-node-id="fkcucezC4bmfDAUBLiJ4iQ" class="sub"><!--pnid:Cr6Vx5WPKlP9E3E70ClfsT-->13 张看进张：<b>直接点下方「有效进张」的牌</b>，就当作摸到它，立刻出打牌建议与役种。也可点上方牌加入、点已选手牌移除。</div>
+    <div data-page-node-id="fkcucezC4bmfDAUBLiJ4iQ" class="sub"><!--pnid:Cr6Vx5WPKlP9E3E70ClfsT-->13 张看进张：<b>直接点下方「有效进张」的牌</b>，就当作摸到它，立刻出打牌建议与役种。也可点上方牌加入、点已选手牌移除。<b>碰/吃/杠过？</b>在下方「副露」区把手牌里的牌转成副露，向听、进张、出张和役种会自动按副露后的结构算。</div>
     <div class="mode-row">
       <span class="mode-label">对局模式：</span>
       <button class="mode-btn on" data-mode="4">四人东/南</button>
@@ -217,6 +233,18 @@
       <input data-page-node-id="B7UwFnC3VA0g5RRFkMNyR7" id="handInput" placeholder="快捷输入，如 123m456p789s东东 或 1112345678999m" type="text">
       <button data-page-node-id="LN7CV2Ix7wAncYRODegycb" class="btn" id="importBtn"><!--pnid:Prgo1nsrmhWju6SxY9QHz8-->导入</button>
       <button data-page-node-id="aD2SMv9PvcRRTEqLwy3PYL" class="btn ghost" id="clearBtn"><!--pnid:pQdAPf5stgaOQjwpNAhUYj-->清空</button>
+    </div>
+    <div class="meld-section">
+      <div class="meld-bar"><span class="mode-label">副露：</span>
+        <button class="meld-btn" data-m="pon">碰</button>
+        <button class="meld-btn" data-m="chi">吃</button>
+        <button class="meld-btn" data-m="mkan">明杠</button>
+        <button class="meld-btn" data-m="akan">暗杠</button>
+        <button class="meld-btn ghost" id="meldUndo">撤销</button>
+        <button class="meld-btn ghost" id="meldClear">清空</button>
+      </div>
+      <div class="meld-tip" id="meldTip">点「碰/吃/杠」→ 点手牌里的牌，选够张数后自动成为副露，不再参与取舍。碰选2张相同、明杠3张相同、暗杠4张相同；吃选同花色相邻2张（自动补成顺子，四麻）。暗杠不破门清，点副露组可撤销。</div>
+      <div class="melds" id="melds"></div>
     </div>
     <div data-page-node-id="v44SgiQHEGRX0ReIBexurS" class="hand" id="hand"></div>
     <div data-page-node-id="aVzfxSPwQtYzIrphWeEMHk" class="result" id="result"></div>
@@ -462,11 +490,15 @@ function tileFaceSVG(i){
 let windRound=0, windSeat=0;        // 0东 1南 2西 3北（场风编码 = 27+v）
 let doraIndicators=[];              // 宝牌指示牌编码数组，最多 5 张
 const MAX_DORA=5;
-// 宝牌 = 指示牌的下一张：数牌按花色 1→9 循环；风 27-30 循环；三元 31→32→33→31（白→发→中→白）
+// 宝牌 = 指示牌的下一张：数牌按花色 1→9 循环；字牌按显示顺序 東南西北中白發 分组循环
+// 风牌 東→南→西→北→東；三元 中→白→發→中（编码 31中/32发/33白，不能直接用 t+1）
+const HONOR_CYCLE=[27,28,29,30,31,33,32]; // 仅用于显示/排序：東南西北中白發
+const DRAGON_CYCLE=[31,33,32];             // 中→白→發→中
+function doraSortKey(t){return t<27?t:27+HONOR_CYCLE.indexOf(t);}
 function nextTile(t){
   if(t<27){const suit=Math.floor(t/9),r=t%9;return suit*9+(r===8?0:r+1);}
-  if(t<=30)return 27+((t-27+1)%4);   // 东南西北循环
-  return 31+((t-31+1)%3);            // 中发白循环
+  if(t<=30)return 27+((t-27+1)%4); // 东南西北循环
+  return DRAGON_CYCLE[(DRAGON_CYCLE.indexOf(t)+1)%3]; // 中白发循环
 }
 function doraTiles(){return doraIndicators.map(nextTile);}
 function isDora(t){return doraTiles().indexOf(t)>=0 || (gameMode===3&&t===30);} // 三麻北=宝牌
@@ -475,7 +507,10 @@ function tileHTML(i,cls){
   return '<span class="tile '+tileClass(i)+' '+(cls||'')+d+'" title="'+TNAMES[i]+(isDora(i)?'（宝牌）':'')+'">'+tileFaceSVG(i)+'</span>';
 }
 
-let hand=[]; // 当前手牌编码数组
+let hand=[]; // 当前手牌（暗牌）编码数组，不含副露
+let melds=[]; // 副露组 [{type:'pon'|'chi'|'mkan'|'akan',tiles:[..],open:bool}]；pon/chi 3张、kan 4张
+let meldMode=null;   // 当前副露操作模式：null/pon/chi/mkan/akan
+let meldPicked=[];   // 副露操作中已选中的手牌编码
 let gameMode=4; // 4=四人麻将 3=三人麻将（三麻无 2-8万）
 function tileAllowed(t){
   if(gameMode===3&&t>=1&&t<=7)return false; // 三麻屏蔽 2-8万（编码1-7）
@@ -500,8 +535,9 @@ function buildPicker(){
       s.title=ok?(TNAMES[i]+(isDora(i)?'（宝牌）':'')):(TNAMES[i]+'（三人麻将无此牌）');
       s.innerHTML=tileFaceSVG(i);
       if(ok)s.onclick=()=>{
-        if(hand.length>=14){alert('已经 14 张了。要换牌请先点下方手牌移除一张。');return;}
-        hand.push(i);if(hand.length===14)selDiscard=null;renderHand();
+        const cap=14-3*melds.length;
+        if(hand.length>=cap){alert('已经 '+cap+' 张了（含副露基准）。要换牌请先点下方手牌移除一张。');return;}
+        hand.push(i);if(hand.length===cap)selDiscard=null;renderHand();
       };
       d.appendChild(s);
     });
@@ -533,7 +569,7 @@ function buildDoraPicker(){
       if(k>=0)doraIndicators.splice(k,1);
       else if(doraIndicators.length<MAX_DORA)doraIndicators.push(t);
       else{alert('最多只能选 '+MAX_DORA+' 张宝牌指示牌。');return;}
-      doraIndicators.sort((a,b)=>a-b);
+      doraIndicators.sort((a,b)=>doraSortKey(a)-doraSortKey(b));
       buildDoraSlots();buildDoraPicker();refreshDoraInfo();buildPicker();renderHand();
     };
     box.appendChild(s);
@@ -587,6 +623,17 @@ document.querySelectorAll('.wind-btn').forEach(btn=>btn.onclick=()=>{
   document.querySelectorAll('.wind-btn[data-wind="'+kind+'"]').forEach(x=>x.classList.toggle('on',x===btn));
   if(hand.length)calc(); // 重新渲染役种建议
 });
+// 三人麻没有北风座位：隐藏「北」自风按钮；已在北时必须改回东
+function syncSeatWindButtons(){
+  const northBtn=document.querySelector('.wind-btn[data-wind="seat"][data-v="3"]');
+  if(!northBtn)return;
+  if(gameMode===3){
+    northBtn.style.display='none';
+    if(windSeat===3)windSeat=0;
+  }else northBtn.style.display='';
+  document.querySelectorAll('.wind-btn[data-wind="seat"]').forEach(x=>x.classList.toggle('on',+x.dataset.v===windSeat));
+}
+syncSeatWindButtons();
 function windYakuPai(){
   // 返回算作役牌的风牌编码（场风+自风，去重）
   return [...new Set([27+windRound,27+windSeat])];
@@ -598,15 +645,30 @@ document.querySelectorAll('.mode-btn').forEach(btn=>btn.onclick=()=>{
   if(m===gameMode)return;
   gameMode=m;
   document.querySelectorAll('.mode-btn').forEach(x=>x.classList.toggle('on',x===btn));
+  syncSeatWindButtons();
   $('#modeNote').textContent=m===3
-    ?'三麻：无2-8万·不可吃·无三色同顺·北可拔北当宝牌'
+    ?'三麻：无2-8万·不可吃·无三色同顺·自风无北，北可拔北当宝牌'
     :'四麻：1-9万齐全，可吃，有三色同顺';
   // 切换时移除手牌中三麻不存在的牌
   if(m===3){
     const before=hand.length;
     hand=hand.filter(t=>tileAllowed(t));
     if(hand.length!==before)alert('三人麻将没有 2-8万，已从手牌中移除。');
+    // 移除含 2-8万 或吃的副露组（来源牌退回手牌再过滤）
+    if(melds.length){
+      const kept=[],bad=[];
+      melds.forEach(g=>{
+        if(g.type==='chi'||g.tiles.some(t=>t>=1&&t<=7)){bad.push(g);g.origin.forEach(t=>hand.push(t));}
+        else kept.push(g);
+      });
+      melds=kept;
+      hand=hand.filter(t=>tileAllowed(t));
+      if(bad.length)alert('三人麻将不能吃、也没有 2-8万，已移除相关副露。');
+    }
   }
+  meldMode=null;meldPicked=[];
+  document.querySelectorAll('.meld-btn').forEach(x=>x.classList.remove('on'));
+  updateMeldTip();
   selDiscard=null;
   // 三麻时移除 2-8万 的指示牌
   if(m===3){
@@ -624,15 +686,113 @@ function renderHand(){
   if(!hand.length){box.innerHTML='<span class="empty">手牌为空，点上方牌或输入快捷码开始</span>';}
   else{
     box.innerHTML='';
-    hand.slice().sort((a,b)=>a-b).forEach(v=>{
-      const s=document.createElement('span');s.className='tile sel '+tileClass(v)+(isDora(v)?' dora':'');s.innerHTML=tileFaceSVG(v);
-      s.title=TNAMES[v]+(isDora(v)?'（宝牌）':'')+'（点击移除）';s.onclick=()=>{hand.splice(hand.indexOf(v),1);renderHand();};
+    // 保留原始索引以区分同种牌的多张实例（副露选牌用）
+    hand.map((v,idx)=>({v,idx})).sort((a,b)=>a.v-b.v).forEach(({v,idx})=>{
+      const picked=meldPicked.some(p=>p.idx===idx);
+      const s=document.createElement('span');s.className='tile sel '+tileClass(v)+(isDora(v)?' dora':'')+(picked?' meld-pick':'');s.innerHTML=tileFaceSVG(v);
+      if(meldMode){
+        s.title=TNAMES[v]+'（点选参与副露，再点一次取消）';
+        s.onclick=()=>{
+          const need={pon:2,chi:2,mkan:3,akan:4}[meldMode];
+          const k=meldPicked.findIndex(p=>p.idx===idx);
+          if(k>=0)meldPicked.splice(k,1);
+          else{
+            if(meldPicked.length>=need){alert('最多选 '+need+' 张。先取消已选的再重选。');return;}
+            meldPicked.push({idx,tile:v});
+          }
+          // 选够自动成立副露
+          if(meldPicked.length===need){const mm=meldMode;doMeld(mm);return;}
+          renderHand();updateMeldTip();
+        };
+      }else{
+        s.title=TNAMES[v]+(isDora(v)?'（宝牌）':'')+'（点击移除）';
+        s.onclick=()=>{hand.splice(idx,1);renderHand();};
+      }
       box.appendChild(s);
     });
   }
   $('#handInput').value=handToStr(hand);
+  renderMelds();
   calc();
 }
+
+// ---- 副露 ----
+function meldBaseline(){return 13-3*melds.length;} // 听牌前应有的暗牌张数
+function updateMeldTip(){
+  const tip=$('#meldTip');
+  if(!meldMode){tip.textContent='点「碰/吃/杠」→ 点手牌里的牌，选够张数后自动成为副露，不再参与取舍。碰选2张相同、明杠3张相同、暗杠4张相同；吃选同花色相邻2张（自动补成顺子，四麻）。暗杠不破门清，点副露组可撤销。';return;}
+  const need={pon:2,chi:2,mkan:3,akan:4}[meldMode];
+  const names={pon:'碰',chi:'吃',mkan:'明杠',akan:'暗杠'};
+  tip.innerHTML='<b style="color:var(--green-d)">'+names[meldMode]+'操作</b>：已选 '+meldPicked.length+'/'+need+' 张（手牌高亮为金色），选够后自动成立；再点一次模式按钮可取消。';
+}
+function renderMelds(){
+  const box=$('#melds');
+  if(!melds.length){box.innerHTML='';return;}
+  box.innerHTML=melds.map((g,i)=>{
+    const tag={pon:'碰',chi:'吃',mkan:'明杠',akan:'暗杠'}[g.type];
+    const tiles=g.tiles.map(t=>tileHTML(t,'small')).join('');
+    const extra=g.origin.map(t=>TNAMES[t]).join('');
+    return '<span class="meld-group'+(g.type==='akan'?' akan':'')+'" title="来自手牌：'+extra+'（点击撤销这组）">'
+      +'<span class="meld-tag">'+tag+'</span>'+tiles
+      +'<span class="meld-tag" style="margin:0 0 0 2px;color:var(--muted)">×</span></span>';
+  }).join('');
+  box.querySelectorAll('.meld-group').forEach((el,i)=>el.onclick=()=>undoMeld(i));
+}
+function doMeld(type){
+  const need={pon:2,chi:2,mkan:3,akan:4}[type];
+  if(meldPicked.length!==need){alert(namesForMeld(type)+'需要正好选 '+need+' 张手牌，当前选了 '+meldPicked.length+' 张。');return;}
+  if(type==='chi'&&gameMode===3){alert('三人麻将不能吃。');return;}
+  const picked=meldPicked.slice();
+  const P=picked.map(x=>x.tile); // 牌编码
+  let tiles,origin;
+  if(type==='pon'||type==='mkan'||type==='akan'){
+    const t=P[0];
+    if(!P.every(x=>x===t)){alert(namesForMeld(type)+'需要相同的牌。');return;}
+    origin=P.slice();
+    tiles=type==='pon'?[t,t,t]:[t,t,t,t];
+  }else{ // chi：两张相邻数牌，补一张成顺子
+    let [a,b]=P.slice().sort((x,y)=>x-y);
+    if(a>=27||b>=27||Math.floor(a/9)!==Math.floor(b/9)||b-a!==1){alert('吃需要选同花色相邻的两张数牌（如三万+四万）。');return;}
+    origin=[a,b];
+    // 补一张：优先补左端（a-1），越界则补右端（b+1）
+    const r=a%9;
+    const left=(r>0)?a-1:null, right=(b%9<8)?b+1:null;
+    const add=(left!==null)?left:right;
+    tiles=[add,a,b].sort((x,y)=>x-y);
+  }
+  // 从手牌移除来源牌：按选中的原始 idx 倒序删除，避免索引错位
+  picked.map(x=>x.idx).sort((x,y)=>y-x).forEach(i=>{if(i>=0&&i<hand.length)hand.splice(i,1);});
+  melds.push({type,tiles,origin,open:type!=='akan'});
+  meldMode=null;meldPicked=[];
+  document.querySelectorAll('.meld-btn').forEach(b=>b.classList.remove('on'));
+  updateMeldTip();selDiscard=null;renderHand();
+}
+function namesForMeld(type){return {pon:'碰',chi:'吃',mkan:'明杠',akan:'暗杠'}[type]||'副露';}
+function undoMeld(i){
+  const g=melds[i];if(!g)return;
+  g.origin.forEach(t=>hand.push(t));
+  melds.splice(i,1);
+  selDiscard=null;renderHand();
+}
+function clearMelds(){
+  melds.forEach(g=>g.origin.forEach(t=>hand.push(t)));
+  melds=[];meldMode=null;meldPicked=[];
+  document.querySelectorAll('.meld-btn').forEach(b=>b.classList.remove('on'));
+  updateMeldTip();selDiscard=null;renderHand();
+}
+document.querySelectorAll('.meld-btn[data-m]').forEach(b=>b.onclick=()=>{
+  const m=b.dataset.m;
+  if(meldMode===m){ // 再点一次取消
+    meldMode=null;meldPicked=[];
+  }else{
+    meldMode=m;meldPicked=[];
+    if(m==='chi'&&gameMode===3){alert('三人麻将不能吃。');meldMode=null;}
+  }
+  document.querySelectorAll('.meld-btn').forEach(x=>x.classList.toggle('on',x.dataset.m===meldMode));
+  updateMeldTip();renderHand();
+});
+$('#meldUndo').onclick=()=>{if(melds.length)undoMeld(melds.length-1);};
+$('#meldClear').onclick=clearMelds;
 function handToStr(h){
   const c=new Array(34).fill(0);h.forEach(x=>c[x]++);
   let s='';
@@ -667,8 +827,10 @@ function parseHand(str){
 
 // ---- 向听算法 ----
 function countToArray(tiles){const c=new Array(34).fill(0);for(const t of tiles)c[t]++;return c;}
-function standardShanten(count){
-  let min=8;const c=count.slice();
+function meldCountArr(){const a=new Array(34).fill(0);melds.forEach(g=>g.tiles.forEach(t=>a[t]++));return a;}
+// fixed=副露组数（固定面子）。每组副露相当于已成 1 面子，dfs 起点 melds=fixed
+function standardShanten(count,fixed){
+  fixed=fixed||0;let min=8;const c=count.slice();
   function dfs(i,melds,partials,hasPair){
     while(i<34&&c[i]===0)i++;
     if(i===34){
@@ -685,16 +847,18 @@ function standardShanten(count){
     if(isNum&&r<=6&&c[i+2]>0){c[i]--;c[i+2]--;dfs(i,melds,partials+1,hasPair);c[i]++;c[i+2]++;}
     c[i]--;dfs(i,melds,partials,hasPair);c[i]++;
   }
-  dfs(0,0,0,0);return min;
+  dfs(0,fixed,0,0);return min;
 }
 function chiitoiShanten(c){let pairs=0,kinds=0;for(let i=0;i<34;i++){if(c[i]>=2)pairs++;if(c[i]>=1)kinds++;}return 6-pairs+Math.max(0,7-kinds);}
 function kokushiShanten(c){const y=[0,8,9,17,18,26,27,28,29,30,31,32,33];let kinds=0,pair=0;for(const t of y){if(c[t]>=1)kinds++;if(c[t]>=2)pair=1;}return 13-kinds-pair;}
-function shantenOf(c){return Math.min(standardShanten(c),chiitoiShanten(c),kokushiShanten(c));}
-function usefulTiles(c,cur){
+// 有副露时七对/国士不成立，只按标准型（含固定面子）算
+function shantenOf(c,fixed){fixed=fixed||0;return fixed>0?standardShanten(c,fixed):Math.min(standardShanten(c,0),chiitoiShanten(c),kokushiShanten(c));}
+function usefulTiles(c,cur,fixed){
+  fixed=fixed||0;const seen=meldCountArr();
   const res=[];for(let t=0;t<34;t++){
     if(!tileAllowed(t))continue;      // 三麻无 2-8万，不能作为进张
-    if(c[t]>=4)continue;
-    c[t]++;if(shantenOf(c)<cur)res.push(t);c[t]--;
+    if(c[t]+seen[t]>=4)continue;      // 手牌+副露已见 4 张，摸不到
+    c[t]++;if(shantenOf(c,fixed)<cur)res.push(t);c[t]--;
   }return res;
 }
 function shText(sh){return sh<0?'和牌':sh===0?'听牌':sh+' 向听';}
@@ -739,17 +903,19 @@ function tileShape(t,c){
   return {name:'中张单张',eff:'8~12张',adv:'周围有搭子则留，否则可打',keep:2};
 }
 
-// 14 张复盘：逐张试打，按「向听少 → 进张多」排序
+// 待打复盘：逐张试打，按「向听少 → 进张多」排序（手牌张数 = 14 - 3×副露组数）
 function analyzeDiscards(h){
-  if(h.length!==14)return null;
+  const fixed=melds.length;
+  if(h.length!==14-3*fixed)return null;
   const counts=countToArray(h);
+  const seen=meldCountArr();
   const uniq=[...new Set(h)].sort((a,b)=>a-b);
   const rows=uniq.map(t=>{
     const shape=tileShape(t,counts);
-    const c=counts.slice();c[t]--;            // 打出这一张后的 13 张
-    const sh=shantenOf(c);
-    const waits=usefulTiles(c,sh);
-    let total=0;waits.forEach(w=>{total+=4-counts[w];}); // 打出的牌已进牌河，故用原计数扣可见张
+    const c=counts.slice();c[t]--;            // 打出这一张后
+    const sh=shantenOf(c,fixed);
+    const waits=usefulTiles(c,sh,fixed);
+    let total=0;waits.forEach(w=>{total+=4-counts[w]-seen[w];}); // 扣手牌可见张 + 副露可见张
     return {tile:t,sh,waits,total,kinds:waits.length,shape};
   });
   // 排序：向听少 → 进张多 → 种类多 → 形状优先级（早巡必舍的排前）→ 宝牌/役牌权重（高价值牌的打出往后排）
@@ -812,8 +978,10 @@ function sanmaTactics(cur,yaku){
     +'</div>';
 }
 
-// 静态手牌结构推断「可能的役种方向」+ 番数，仅供参考（未含副露/场风/立直等状态）
-function suggestYaku(c){
+// 静态手牌结构推断「可能的役种方向」+ 番数，仅供参考
+// full = 手牌+副露的全部牌计数；openMeld = 是否存在明副露（碰/吃/明杠），暗杠不破门清
+function suggestYaku(full,openMeld){
+  const c=full;openMeld=!!openMeld;
   const res=[];
   const n=i=>c[i]||0;
   const total=c.reduce((a,b)=>a+b,0)||1;
@@ -821,10 +989,10 @@ function suggestYaku(c){
   for(let i=0;i<34;i++){if(n(i)>0)kinds++;if(i>=27)honors+=n(i);}
   const add=(name,han,ym)=>res.push({name,han,ym:!!ym});
 
-  // 七对子：对子数（4张计2对的上限处理）
+  // 七对子：门清限定，有副露不成立
   let pairs=0;for(let i=0;i<34;i++)pairs+=Math.floor(n(i)/2);
-  if(pairs>=5) add('七对子','2番');
-  // 对对和倾向：刻子/对子多
+  if(!openMeld&&pairs>=5) add('七对子','2番');
+  // 对对和倾向：刻子/对子多（副露的碰/杠已是刻子，计入）
   let triples=0;for(let i=0;i<34;i++)if(n(i)>=3)triples++;
   if(triples>=2) add('对对和','2番');
 
@@ -859,7 +1027,7 @@ function suggestYaku(c){
   // 幺九 / 老头
   const ya=[0,8,9,17,18,26,27,28,29,30,31,32,33];
   const allYao=ya.every(i=>n(i)>0);
-  if(allYao) add('国士无双','役满',true);
+  if(allYao&&!openMeld) add('国士无双','役满',true);
   let allTerminalOrHonor=c.slice(0,34).every((v,i)=>v===0||i>=27||i%9===0||i%9===8);
   let numCount=total-honors;
   if(allTerminalOrHonor&&numCount>0&&honors>0) add('混老头','2番');
@@ -879,7 +1047,7 @@ function suggestYaku(c){
     return {total,hasIipeiko};
   }
   const rs=runStats(c);
-  if(rs.hasIipeiko) add('一杯口 / 二杯口','1番起');
+  if(rs.hasIipeiko&&!openMeld) add('一杯口 / 二杯口','1番起');
 
   // 一气通贯：同花色 123+456+789
   for(let s=0;s<3;s++){
@@ -889,8 +1057,8 @@ function suggestYaku(c){
   if(gameMode===4)for(let r=0;r<=6;r++){
     if(n(r)&&n(r+1)&&n(r+2)&&n(9+r)&&n(9+r+1)&&n(9+r+2)&&n(18+r)&&n(18+r+1)&&n(18+r+2)){add('三色同顺','2番');break;}
   }
-  // 平和倾向：4 组顺子 + 雀头、无字牌、无刻子，且非七对路线
-  if(honors===0&&rs.total>=4&&triples===0&&pairs>=1&&pairs<5) add('平和','1番');
+  // 平和倾向：门清限定，4 组顺子 + 雀头、无字牌、无刻子，且非七对路线
+  if(!openMeld&&honors===0&&rs.total>=4&&triples===0&&pairs>=1&&pairs<5) add('平和','1番');
 
   // 若已听牌相（14 张和牌形另算），给个基础提示
   if(!res.length) add('暂无明显役向','—');
@@ -924,9 +1092,11 @@ function renderDiscardBoard(rows){
     inTiles='<span style="font-size:12.5px;color:var(--muted)">无进张（已成型或需换思路）</span>';
   }
 
-  // 役种建议：按「打出 selDiscard 后的 13 张」推断
+  // 役种建议：按「打出 selDiscard 后的手牌 + 副露」推断
   const after=countToArray(hand);after[selDiscard]--;
-  const yaku=suggestYaku(after);
+  melds.forEach(g=>g.tiles.forEach(t=>after[t]++));
+  const openMeld=melds.some(g=>g.open);
+  const yaku=suggestYaku(after,openMeld);
   let pills='',hanSum=0,hasYm=false;
   yaku.forEach(y=>{
     pills+='<span class="yaku-pill'+(y.ym?' ym':'')+'">'+y.name+'<span class="han">'+y.han+'</span></span>';
@@ -974,46 +1144,53 @@ function renderDiscardBoard(rows){
 
 function calc(){
   const box=$('#result');const board=$('#discardBoard');
-  if(!hand.length){board.innerHTML='';box.className='result';box.innerHTML='<div class="shanten small">—</div>';return;}
-  const c=countToArray(hand);const sh=shantenOf(c);
+  const fixed=melds.length;const base=meldBaseline(); // 听牌前应有的暗牌张数 = 13-3×副露
+  const meldNote=fixed?('<div class="meld-note">已副露 '+fixed+' 组 · 当前手牌 '+hand.length+' 张（听牌前基准 '+base+' 张，待打基准 '+(base+1)+' 张）</div>'):'';
+  if(!hand.length){board.innerHTML='';box.className='result';box.innerHTML='<div class="shanten small">—</div>'+meldNote;return;}
+  const c=countToArray(hand);const sh=shantenOf(c,fixed);
   if(sh===-1){
     board.innerHTML='';
     box.className='result win';
-    box.innerHTML='<div class="shanten">和牌形 ✓ <small>14 张已成立</small></div>';
-    const ys=suggestYaku(c);
+    box.innerHTML='<div class="shanten">和牌形 ✓ <small>'+hand.length+' 张暗牌 + '+fixed+' 组副露已成立</small></div>';
+    const full=c.slice();melds.forEach(g=>g.tiles.forEach(t=>full[t]++));
+    const ys=suggestYaku(full,melds.some(g=>g.open));
     box.innerHTML+='<div class="yaku-sugg" style="margin-top:12px"><h4>成立的役种（仅供参考）</h4><div class="yaku-pills">'
-      +ys.map(y=>'<span class="yaku-pill'+(y.ym?' ym':'')+'">'+y.name+'<span class="han">'+y.han+'</span></span>').join('')+'</div></div>';
+      +ys.map(y=>'<span class="yaku-pill'+(y.ym?' ym':'')+'">'+y.name+'<span class="han">'+y.han+'</span></span>').join('')+'</div></div>'+meldNote;
     return;
   }
-  if(hand.length===14){
-    box.className='result';box.innerHTML='';
+  if(hand.length===base+1){
+    box.className='result';box.innerHTML=meldNote;
     const rows=analyzeDiscards(hand);
     renderDiscardBoard(rows);
     return;
   }
   board.innerHTML='';
   box.className='result';
-  let html='<div class="shanten">'+(sh===0?'听牌':sh+' 向听')+' <small>'+(sh===0?'可以和牌了':'再进 '+sh+' 步听牌')+'</small></div>';
-  if(hand.length===13){
-    const waits=usefulTiles(c,sh);
-    let total=0;const items=waits.map(t=>{const rem=4-c[t];total+=rem;return '<div class="wait-tile pick-wait" data-t="'+t+'" title="点此模拟摸到'+TNAMES[t]+'">'+tileHTML(t,'small win clickable')+'<span class="cnt">余'+rem+'</span></div>';}).join('');
+  let html=meldNote+'<div class="shanten">'+(sh===0?'听牌':sh+' 向听')+' <small>'+(sh===0?'可以和牌了':'再进 '+sh+' 步听牌')+'</small></div>';
+  if(hand.length===base){
+    const seen=meldCountArr();
+    const waits=usefulTiles(c,sh,fixed);
+    let total=0;const items=waits.map(t=>{const rem=4-c[t]-seen[t];total+=rem;return '<div class="wait-tile pick-wait" data-t="'+t+'" title="点此模拟摸到'+TNAMES[t]+'">'+tileHTML(t,'small win clickable')+'<span class="cnt">余'+rem+'</span></div>';}).join('');
     html+='<div class="waits"><b>有效进张（可直接点选摸入）：</b>'+(items||'无')+'</div>';
     html+='<div class="statline">共 <b>'+total+'</b> 枚进张 · '+waits.length+' 种牌 · 点上方进张牌即可摸入并看打牌建议</div>';
-  }else if(hand.length<13){
-    html+='<div class="statline">再补 '+(13-hand.length)+' 张到 13 张即可算进张</div>';
+  }else if(hand.length<base){
+    html+='<div class="statline">再补 '+(base-hand.length)+' 张到 '+base+' 张'+(fixed?'（含副露基准）':'')+'即可算进张</div>';
+  }else{
+    html+='<div class="statline">手牌 '+hand.length+' 张，超出待打基准 '+(base+1)+' 张，请先移除 '+(hand.length-base-1)+' 张。</div>';
   }
   box.innerHTML=html;
-  // 13 张时：点「有效进张」牌 → 摸入成为第 14 张 → 联动出打牌建议
+  // 听牌前张数时：点「有效进张」牌 → 摸入成为待打张数 → 联动出打牌建议
   box.querySelectorAll('.pick-wait').forEach(el=>el.onclick=()=>{
-    if(hand.length!==13)return;
+    if(hand.length!==base)return;
     hand.push(+el.dataset.t);
+    meldMode=null;meldPicked=[];
     selDiscard=null;
     renderHand();
   });
 }
 
-$('#importBtn').onclick=()=>{const p=parseHand($('#handInput').value);if(!p.length){alert('没识别到有效牌。格式示例：123m456p789s东东');return;}hand=p.slice(0,14);selDiscard=null;renderHand();};
-$('#clearBtn').onclick=()=>{hand=[];selDiscard=null;renderHand();};
+$('#importBtn').onclick=()=>{const p=parseHand($('#handInput').value);if(!p.length){alert('没识别到有效牌。格式示例：123m456p789s东东');return;}hand=p.slice(0,14);melds=[];meldMode=null;meldPicked=[];document.querySelectorAll('.meld-btn').forEach(x=>x.classList.remove('on'));updateMeldTip();selDiscard=null;renderHand();};
+$('#clearBtn').onclick=()=>{hand=[];melds=[];meldMode=null;meldPicked=[];document.querySelectorAll('.meld-btn').forEach(x=>x.classList.remove('on'));updateMeldTip();selDiscard=null;renderHand();};
 renderHand();
 
 /* ========== 役种速查 ========== */
