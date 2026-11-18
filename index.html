@@ -108,7 +108,7 @@
   .board-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}
   .board-head h3{font-size:14px;color:var(--green-d)}
   .board-head .tag{font-size:11.5px;color:var(--muted)}
-  .board-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .board-cols{display:grid;grid-template-columns:4fr 5fr;gap:12px}
   .board-col{background:#fafcfb;border:1px solid var(--line);border-radius:10px;padding:12px}
   .board-col h4{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:9px}
   .discard-btns{display:flex;flex-wrap:wrap;gap:6px}
@@ -149,8 +149,11 @@
   .tile.dora-pick.on{outline:2px solid var(--gold);outline-offset:1px;transform:translateY(-2px)}
   .in-tiles{min-height:38px}
   .in-sum{font-size:12px;color:var(--muted);margin-top:7px}
-  .yaku-sugg{margin-top:12px;background:#fff;border:1px solid #c7e6d3;border-radius:10px;padding:11px 13px}
-  .yaku-sugg h4{font-size:12.5px;color:var(--green-d);margin-bottom:8px}
+  .yaku-sugg{margin-bottom:12px;background:#fff;border:1px solid #c7e6d3;border-radius:10px;padding:11px 13px}
+  .yaku-sugg-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px 12px;margin-bottom:8px}
+  .yaku-sugg-head h4{font-size:12.5px;color:var(--green-d);margin:0}
+  .yaku-total{font-size:12px;color:var(--muted)}
+  .yaku-total b{color:var(--gold);font-size:14px;font-weight:800}
   .yaku-pills{display:flex;flex-wrap:wrap;gap:7px}
   .yaku-pill{background:var(--green-l);color:var(--green-d);border:1px solid #c7e6d3;border-radius:16px;padding:4px 11px;font-size:12.5px;font-weight:600}
   .yaku-pill .han{color:var(--gold);font-weight:700;margin-left:3px}
@@ -880,10 +883,19 @@ function renderDiscardBoard(rows){
   // 役种建议：按「打出 selDiscard 后的 13 张」推断
   const after=countToArray(hand);after[selDiscard]--;
   const yaku=suggestYaku(after);
-  let pills='';
+  let pills='',hanSum=0,hasYm=false;
   yaku.forEach(y=>{
     pills+='<span class="yaku-pill'+(y.ym?' ym':'')+'">'+y.name+'<span class="han">'+y.han+'</span></span>';
+    const m=String(y.han).match(/(\d+)番/);   // n番 / 1番起 → 取 n
+    if(m) hanSum+=+m[1];
+    else if(y.han==='役满') hasYm=true;
+    if(y.han==='番外'){ const d=String(y.name).match(/×(\d+)/); if(d) hanSum+=+d[1]; } // 宝牌每张1番
   });
+  const hanTotal=hasYm?'役满':(hanSum?('约 '+hanSum+' 番'):'—');
+  const yakuBox='<div class="yaku-sugg">'
+    +'<div class="yaku-sugg-head"><h4>建议役种方向（按打完的手牌结构推断，仅供参考）</h4>'
+    +'<span class="yaku-total">预估合计 <b>'+hanTotal+'</b></span></div>'
+    +'<div class="yaku-pills">'+pills+'</div></div>';
 
   // 结论文字（针对当前选中的出张）
   let verdict='';
@@ -900,6 +912,7 @@ function renderDiscardBoard(rows){
     +'</div>';
 
   board.innerHTML='<div class="board">'
+    +yakuBox
     +'<div class="board-head"><h3>打牌分析</h3><span class="tag">点右侧出张按钮，左侧进张与役种随之更新</span></div>'
     +'<div class="board-cols">'
       +'<div class="board-col"><h4>当前进张（打 '+TNAMES[selDiscard]+' 后）</h4><div class="in-tiles">'+inTiles+'</div>'
@@ -908,7 +921,6 @@ function renderDiscardBoard(rows){
     +'</div>'
     +'<div class="verdict">'+verdict+'</div>'
     +shapeBox
-    +'<div class="yaku-sugg"><h4>建议役种方向（按打完的手牌结构推断，仅供参考）</h4><div class="yaku-pills">'+pills+'</div></div>'
     +'<div class="hint">排序：先看打完后的向听数（少者优先），再看进张枚数（多者优先），同分时按形状优先级（早巡该舍的孤立牌在前）。'+(gameMode===3?'<b>三麻模式</b>：已排除2-8万，不提示三色同顺，北可作宝牌。':'')+' 已按上方<b>场风/自风</b>判断风牌役牌、按<b>宝牌指示牌</b>高亮宝牌并加权保留；宝牌对子虽可能被牌效率排在前面，拆与不拆请结合做牌方向权衡。役种番数按雀魂常见规则标注，实际能否成立还受副露、立直等影响；进张枚数未计入他家手牌与牌河。</div>'
     +'</div>';
 
