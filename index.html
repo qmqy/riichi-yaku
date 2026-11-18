@@ -500,13 +500,17 @@ function tileFaceSVG(i){
 let windRound=0, windSeat=0;        // 0东 1南 2西 3北（场风编码 = 27+v）
 let doraIndicators=[];              // 宝牌指示牌编码数组，最多 5 张
 const MAX_DORA=5;
+let gameMode=4; // 4=四人麻将 3=三人麻将（三麻无 2-8万）
 // 宝牌 = 指示牌的下一张：数牌按花色 1→9 循环；字牌分组循环（风 東→南→西→北→東；三元 中→白→發→中）
 // 注意：显示顺序统一为 東南西北白發中，与宝牌推算顺序是两回事
 const HONOR_CYCLE=[27,28,29,30,33,32,31]; // 显示/排序：東南西北白發中
 const DRAGON_CYCLE=[31,33,32];             // 宝牌推算：中→白→發→中（编码 31中/32发/33白，不能直接用 t+1）
 function doraSortKey(t){return t<27?t:27+HONOR_CYCLE.indexOf(t);}
 function nextTile(t){
-  if(t<27){const suit=Math.floor(t/9),r=t%9;return suit*9+(r===8?0:r+1);}
+  if(t<27){
+    if(gameMode===3&&t<9)return t===0?8:0; // 三麻万子只剩 1、9，互为宝牌指示牌
+    const suit=Math.floor(t/9),r=t%9;return suit*9+(r===8?0:r+1);
+  }
   if(t<=30)return 27+((t-27+1)%4); // 东南西北循环
   return DRAGON_CYCLE[(DRAGON_CYCLE.indexOf(t)+1)%3]; // 中白发循环
 }
@@ -521,7 +525,6 @@ let hand=[]; // 当前手牌（暗牌）编码数组，不含副露
 let melds=[]; // 副露组 [{type:'pon'|'chi'|'mkan'|'akan',tiles:[..],open:bool}]；pon/chi 3张、kan 4张
 let meldMode=null;   // 当前副露操作模式：null/pon/chi/mkan/akan
 let meldPicked=[];   // 副露操作中已选中的手牌编码
-let gameMode=4; // 4=四人麻将 3=三人麻将（三麻无 2-8万）
 function tileAllowed(t){
   if(gameMode===3&&t>=1&&t<=7)return false; // 三麻屏蔽 2-8万（编码1-7）
   return true;
