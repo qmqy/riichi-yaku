@@ -944,9 +944,18 @@ function analyzeDiscards(h){
     let total=0;waits.forEach(w=>{total+=4-counts[w]-seen[w];}); // 扣手牌可见张 + 副露可见张
     return {tile:t,sh,waits,total,kinds:waits.length,shape};
   });
-  // 排序：向听少 → 进张多 → 种类多 → 形状优先级（早巡必舍的排前）→ 宝牌/役牌权重（高价值牌的打出往后排）
-  rows.forEach(r=>r.bonus=r.shape.bonus||0);
-  rows.sort((a,b)=>a.sh-b.sh || b.total-a.total || b.kinds-a.kinds || a.shape.keep-b.shape.keep || a.bonus-b.bonus || a.tile-b.tile);
+  // 保留价值：成型的高价值牌（役牌/宝牌的对子、刻子）不该拆——碰出即成役/加番。
+  // 拆对子后能摸回成对会让「进张数」虚高，若只看进张会错误推荐打掉中发白，故单列此键排在进张之前。
+  // 只对 cnt>=2 的役牌/宝牌生效；单张高价值牌仍按牌效走，不强行保留。
+  rows.forEach(r=>{
+    r.bonus=r.shape.bonus||0;
+    const cnt=counts[r.tile], t=r.tile;
+    const isYakuPair=cnt>=2 && (t>=31 || windYakuPai().indexOf(t)>=0); // 三元/场风/自风 对子或刻子
+    const isDoraPair=cnt>=2 && isDora(t);                              // 宝牌对子或刻子
+    r.keepValue=isDoraPair?2:(isYakuPair?1:0);                         // 越大越该留，排序时往后排
+  });
+  // 排序：向听少 → 保留价值高(往后) → 进张多 → 种类多 → 形状优先级 → bonus → 牌号
+  rows.sort((a,b)=>a.sh-b.sh || a.keepValue-b.keepValue || b.total-a.total || b.kinds-a.kinds || a.shape.keep-b.shape.keep || a.bonus-b.bonus || a.tile-b.tile);
   return rows;
 }
 
